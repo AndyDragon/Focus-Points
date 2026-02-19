@@ -718,7 +718,7 @@ local function showFocusPoint()
       -- Make the current photo the only selected one:
       -- otherwise potential flagging operations will apply to all selected photos
       catalog:setSelectedPhotos(targetPhoto, {})
-      Debug.callWithContext("innerContext", Debug.showErrors( function(dialogContext)
+      LrFunctionContext.callWithContext("innerContext", function(dialogContext)
         dialogScope = LrDialogs.showModalProgressDialog {
           title = "Loading Data",
           caption = "Calculating Focus Point",
@@ -747,7 +747,7 @@ local function showFocusPoint()
         else
           errorMsg = "Photo is not available. Make sure hard drives are attached and try again"
         end
-      end))
+      end)
       LrTasks.sleep(0.02) -- this actually closes the dialog. go figure.
 
       -- "Loading Data" dialog has been canceled
