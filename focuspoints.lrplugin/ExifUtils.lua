@@ -119,6 +119,12 @@ function ExifUtils.readMetadata(targetPhoto)
   local cmd, outputFileName = getExifCmd(targetPhoto)
   local rc = LrTasks.execute(cmd)
 
+  -- Avoid Windows process queue saturation
+  if WIN_ENV then
+      LrTasks.sleep(0.02)
+      LrTasks.yield()
+  end
+
   Log.logDebug("ExifUtils", "ExifTool command: " .. cmd)
   if rc ~= 0 then
     -- something went wrong
@@ -221,7 +227,7 @@ function ExifUtils.getBinaryValue(photo, key)
   local path = photo:getRawMetadata("path")
   local output = Utils.getTempFileName()
   local singleQuoteWrap = '\'"\'"\''
-  local cmd, result
+  local cmd, result, rc
 
   if key then
     -- Compose the command line string
@@ -237,7 +243,14 @@ function ExifUtils.getBinaryValue(photo, key)
     end
 
     -- Call ExifTool to output key's value in binary format
-    local rc = LrTasks.execute(cmd)
+    rc = LrTasks.execute(cmd)
+
+    -- Avoid Windows process queue saturation
+    if WIN_ENV then
+        LrTasks.sleep(0.02)
+        LrTasks.yield()
+    end
+
     if (rc == 0) then
       -- Read redirected stdout from temp file to save output
       result = LrFileUtils.readFile(output)
@@ -250,7 +263,8 @@ function ExifUtils.getBinaryValue(photo, key)
       Log.logWarn("Utils", "Unable to delete ExifTool output file " .. output)
     end
   end
-  return result
+
+  return result, rc
 end
 
 --[[----------------------------------------------------------------------------

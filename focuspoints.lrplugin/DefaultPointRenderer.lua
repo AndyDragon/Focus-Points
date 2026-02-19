@@ -27,6 +27,7 @@ local DefaultPointRenderer = {}
 -- Imported LR SDK namespaces
 local LrApplication    = import  'LrApplication'
 local LrPrefs          = import  'LrPrefs'
+local LrTasks          = import  'LrTasks'
 local LrView           = import  'LrView'
 
 -- Required Lua definitions
@@ -94,6 +95,7 @@ function DefaultPointRenderer.createPhotoView(photo, photoDisplayWidth, photoDis
     else      -- no overlays, just display the image
       photoView = imageView
     end
+
   end
 
   photoView.mouse_down = function()
@@ -194,6 +196,7 @@ end
   Remove any remnants left over from processing the current photo
 ------------------------------------------------------------------------------]]
 function DefaultPointRenderer.cleanup()
+  LrTasks.yield()
   ExifUtils.cleanup()
   if WIN_ENV then
     MogrifyUtils.cleanup()
@@ -408,6 +411,9 @@ function prepareRendering(photo, photoDisplayWidth, photoDisplayHeight, metadata
           trX>photoDisplayWidth or brX >photoDisplayWidth or
           blY>photoDisplayHeight or brY>photoDisplayHeight
       end
+
+      -- To prevent UI freeze and keep plugin responsive
+      LrTasks.yield()
     end
   end
 
@@ -427,9 +433,10 @@ end
 ------------------------------------------------------------------------------]]
 function createOverlayViews(fpTable, photoDisplayWidth, photoDisplayHeight)
 
-  local viewsTable = {
-    place = "overlapping"
-  }
+local viewsTable = {
+  place = "overlapping"
+
+}
 
   if fpTable then
 

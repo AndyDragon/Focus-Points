@@ -73,14 +73,10 @@ FocusPointPrefs.masterVersionFile  = "https://raw.githubusercontent.com/musselwh
 FocusPointPrefs.latestVersionFile  = "https://raw.githubusercontent.com/musselwhizzle/Focus-Points/v3.2_pre/focuspoints.lrplugin/Version.txt"
 FocusPointPrefs.latestVersionFile  = "https://raw.githubusercontent.com/musselwhizzle/Focus-Points/master/focuspoints.lrplugin/Version.txt"
 
--- URL definitions
-FocusPointPrefs.urlUserManual      = "https://github.com/musselwhizzle/Focus-Points/blob/v3.2_pre/docs/Focus%20Points.md"
-FocusPointPrefs.urlUserManual      = "https://github.com/musselwhizzle/Focus-Points/blob/master/docs/Focus%20Points.md"
-FocusPointPrefs.urlTroubleShooting = "https://github.com/musselwhizzle/Focus-Points/blob/v3.2_pre/docs/Troubleshooting_FAQ.md"
-FocusPointPrefs.urlTroubleShooting = "https://github.com/musselwhizzle/Focus-Points/blob/master/docs/Troubleshooting_FAQ.md"
-FocusPointPrefs.urlkbdShortcuts    = "https://github.com/musselwhizzle/Focus-Points/blob/v3.2_pre/docs/Focus%20Points.md#keyboard-shortcuts"
-FocusPointPrefs.urlkbdShortcuts    = "https://github.com/musselwhizzle/Focus-Points/blob/master/docs/Focus%20Points.md#keyboard-shortcuts"
-FocusPointPrefs.urlTroubleShooting = "https://github.com/musselwhizzle/Focus-Points/blob/master/docs/Troubleshooting_FAQ.md"
+-- URL definitions for accessing documents from the UI
+FocusPointPrefs.urlUserManual      = "https://musselwhizzle.github.io/Focus-Points/docs/Focus-Points.html"
+FocusPointPrefs.urlTroubleShooting = "https://musselwhizzle.github.io/Focus-Points/docs/Troubleshooting_FAQ.html"
+FocusPointPrefs.urlkbdShortcuts    = "https://musselwhizzle.github.io/Focus-Points/docs/Focus-Points.html#keyboard-shortcuts"
 FocusPointPrefs.urlKofi            = "https://ko-fi.com/focuspoints"
 
 -- Keyboard shortcut definitions
@@ -92,8 +88,13 @@ FocusPointPrefs.kbdShortcutsReject          = "x"
 FocusPointPrefs.kbdShortcutsPickNext        = "P"
 FocusPointPrefs.kbdShortcutsUnflagNext      = "U"
 FocusPointPrefs.kbdShortcutsRejectNext      = "X"
+FocusPointPrefs.kbdShortcutsToggleImageInfo = "iI"
+FocusPointPrefs.kbdShortcutsToggleShootInfo = "sS"
+FocusPointPrefs.kbdShortcutsToggleFocusInfo = "fF"
+FocusPointPrefs.kbdShortcutsToggleInfoView  = "vV"
 FocusPointPrefs.kbdShortcutsCheckLog        = "lL"
 FocusPointPrefs.kbdShortcutsTroubleShooting = "?hH"
+FocusPointPrefs.kbdShortcutsHelp            = "kK"
 FocusPointPrefs.kbdShortcutsUserManual      = "mM"
 FocusPointPrefs.kbdShortcutsClose           = "cC"
 
@@ -113,17 +114,22 @@ local bind = LrView.bind
 ------------------------------------------------------------------------------]]
 function FocusPointPrefs.InitializePrefs(prefs)
   -- Set any undefined properties to their default values
-  if not prefs.screenScaling           then	prefs.screenScaling       = 0 end
-  if not prefs.pluginWindowScaling     then prefs.pluginWindowScaling = FocusPointPrefs.pluginWindowL end
-  if     prefs.truncateLongText == nil then prefs.truncateLongText    = true     end
-  if not prefs.truncateLimit           then prefs.truncateLimit       = 32       end
-  if not prefs.focusBoxSize            then	prefs.focusBoxSize        = FocusPointPrefs.focusBoxSize[FocusPointPrefs.initfocusBoxSize] end
-  if not prefs.focusBoxColor           then	prefs.focusBoxColor       = "red"    end
-  if     prefs.taggingControls  == nil then prefs.taggingControls     = true     end
-  if     prefs.keyboardLayout   == nil then prefs.keyboardLayout      = KeyboardLayout.autoDetectLayout end
-  if not prefs.loggingLevel            then	prefs.loggingLevel        = "AUTO"   end
-  if     prefs.checkForUpdates  == nil then	prefs.checkForUpdates     = true     end   -- here we need a nil pointer check!!
-  if     prefs.keyboardInput    == nil then prefs.keyboardInput       = FocusPointPrefs.kbdInputRegular end
+  if not prefs.screenScaling              then prefs.screenScaling              = 0 end
+  if not prefs.pluginWindowScaling        then prefs.pluginWindowScaling        = FocusPointPrefs.pluginWindowL end
+  if     prefs.truncateLongText   == nil  then prefs.truncateLongText           = true      end
+  if not prefs.truncateLimit              then prefs.truncateLimit              = 32        end
+  if not prefs.focusBoxSize               then prefs.focusBoxSize               = FocusPointPrefs.focusBoxSize[FocusPointPrefs.initfocusBoxSize] end
+  if not prefs.focusBoxColor              then prefs.focusBoxColor              = "red"     end
+  if     prefs.taggingControls    == nil  then prefs.taggingControls            = true      end
+  if     prefs.keyboardLayout     == nil  then prefs.keyboardLayout             = KeyboardLayout.autoDetectLayout end
+  if not prefs.loggingLevel               then prefs.loggingLevel               = "AUTO"    end
+  if     prefs.overwriteCropAngle == nil  then prefs.overwriteCropAngle         = false     end
+  if     prefs.straightenLimits   == nil  then prefs.straightenLimits           = false     end
+  if not prefs.straightenLimitLow         then prefs.straightenLimitLow         = -0        end
+  if not prefs.straightenLimitHigh        then prefs.straightenLimitHigh        =  45       end
+  if not prefs.straightenSummaryCondition then prefs.straightenSummaryCondition = "SKIPPED" end
+  if     prefs.checkForUpdates    == nil  then prefs.checkForUpdates            = true      end   -- here we need a nil pointer check!!
+  if     prefs.keyboardInput      == nil  then prefs.keyboardInput              = FocusPointPrefs.kbdInputRegular end
   -- get the latest plugin version for update checks
   FocusPointPrefs.retrieveVersionOfLatestRelease()
 end
@@ -143,6 +149,13 @@ local function getWinScalingFactor()
 
   -- Query registry value by calling REG.EXE
   local rc = LrTasks.execute(cmd)
+
+  -- Avoid Windows process queue saturation
+  if WIN_ENV then
+      LrTasks.sleep(0.02)
+      LrTasks.yield()
+  end
+
   Log.logDebug("Utils", "Retrieving DPI scaling level from Windosws registry using REG.EXE")
   Log.logDebug("Utils", "REG command: " .. cmd .. ", rc=" .. rc)
 
@@ -593,6 +606,85 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
       },
     }
   end
+  local function sectionStraighteningOptions()
+    return
+    {
+      title = "Straightening Options",
+      bind_to_object = prefs,
+      spacing = f:control_spacing(),
+      f:row {
+        bind_to_object = prefs,
+        spacing = f:control_spacing(),
+        f:popup_menu {
+          title = "overwriteCropAngle",
+          value = bind("overwriteCropAngle"),
+          width = dropDownWidth,
+          items = {
+            { title = "On", value = true },
+            { title = "Off", value = false },
+          }
+        },
+        f:static_text {
+          title = 'Overwrite existing crop angle setting'
+        },
+      },
+      f:row {
+        bind_to_object = prefs,
+        spacing = f:control_spacing(),
+        f:popup_menu {
+          title = "straightenLimits",
+          value = bind ("straightenLimits"),
+          width = dropDownWidth,
+          items = {
+            { title = "On",  value = true  },
+            { title = "Off", value = false },
+          },
+        },
+        f:static_text {
+          title = 'Limit correction to angles between'
+        },
+        f:edit_field {
+          value = bind ("straightenLimitLow"),
+          width_in_chars = 3,
+          min = 0,
+          max = 45,
+          precision = 1,
+        },
+        f:static_text {
+          title = 'and',
+        },
+        f:edit_field {
+          value = bind ("straightenLimitHigh"),
+          width_in_chars = 3,
+          min = 0,
+          max = 45,
+          precision = 1,
+        },
+        f:static_text {
+          title = 'degrees (in any direction)',
+        },
+      },
+      f:row {
+        bind_to_object = prefs,
+        spacing = f:control_spacing(),
+        f:popup_menu {
+          title = "Straighten Summary Condition",
+          value = bind('straightenSummaryCondition'),
+          width = dropDownWidth,
+          items = {
+            { title = "Always",         value = "ALWAYS" },
+            { title = "Skipped Images", value = "SKIPPED" },
+            { title = "Warnings",       value = "WARNINGS" },
+            { title = "Errors",         value = "ERRORS" },
+            { title = "Never",          value = "SKIPPED" },
+          }
+        },
+        f:static_text {
+          title = 'Condition to open the summary dialog when straightening is complete'
+        },
+      },
+    }
+  end
   local function sectionUpdates()
     return
     {
@@ -660,6 +752,7 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
     sectionUserInterface(),
     sectionViewingOptions(),
     sectionLogging(),
+    sectionStraighteningOptions(),
     sectionUpdates(),
     sectionAcknowledgements(),
   }

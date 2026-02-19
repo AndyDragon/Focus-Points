@@ -32,6 +32,11 @@ return {
       file = "Metadata.lua",
       enabledWhen = "photosSelected"
     },
+    {
+      title = "Straighten Images",
+      file = "Straighten.lua",
+      enabledWhen = "photosSelected"
+    },
   },
 
   -- Allow invokation from "File -> Plugin Extras" menu as well
@@ -47,9 +52,14 @@ return {
       file = "Metadata.lua",
       enabledWhen = "photosSelected"
     },
+    {
+      title = "Straighten Images",
+      file = "Straighten.lua",
+      enabledWhen = "photosSelected"
+    },
   },
 
-	VERSION = { major=3, minor=2, revision=0, build=1, display="3.2" },
+	VERSION = { major=3, minor=3, revision=0, build=9001, display="3.3 PRE 1" },
 
   LrPluginInfoProvider = 'FocusPointsInfoProvider.lua',
 
