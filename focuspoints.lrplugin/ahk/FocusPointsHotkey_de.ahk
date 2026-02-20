@@ -18,6 +18,7 @@ SetWorkingDir(A_ScriptDir)  ; Ensures a consistent starting directory.
 {
   NumpadMult::  MenuSelect(, , "Datei", "Plug-in-Extras", "` ` ` Show Focus Point")
   NumpadDiv::   MenuSelect(, , "Datei", "Plug-in-Extras", "` ` ` Show Metadata")
+ ^NumpadSub::   MenuSelect(, , "Datei", "Plug-in-Extras", "` ` ` Straighten Images")
 
 ; ACHTUNG !!!
 ; Bis inkl. LR 14.4 hieß der relevante Menüpunkt im Datei-Menü "Zusatzmoduloptionen":
