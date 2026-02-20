@@ -142,9 +142,9 @@ local function straightenImages()
     -- Depending on the user setting, bring up summary dialog with details or just a plain 'completed' message
     local cond = prefs.straightenSummaryCondition
     if (cond == 'ALWAYS')
-    or (cond == 'SKIPPED'  and stats.skipped  > 0 or stats.warnings > 0 or stats.errors > 0)
-    or (cond == 'WARNINGS' and stats.warnings > 0 or stats.errors   > 0)
-    or (cond == 'ERRORS'   and stats.errors   > 0) then
+    or (cond == 'SKIPPED'  and (stats.skipped  > 0 or stats.warnings > 0 or stats.errors > 0))
+    or (cond == 'WARNINGS' and (stats.warnings > 0 or stats.errors   > 0))
+    or (cond == 'ERRORS'   and (stats.errors   > 0)) then
       showSummaryDialog(message, severity, logFileName)
     else
       LrDialogs.showBezel("Straightening completed")

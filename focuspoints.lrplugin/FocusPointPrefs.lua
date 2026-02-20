@@ -675,7 +675,7 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
             { title = "Skipped Images", value = "SKIPPED" },
             { title = "Warnings",       value = "WARNINGS" },
             { title = "Errors",         value = "ERRORS" },
-            { title = "Never",          value = "SKIPPED" },
+            { title = "Never",          value = "NEVER" },
           }
         },
         f:static_text {
