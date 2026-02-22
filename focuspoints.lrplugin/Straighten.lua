@@ -218,6 +218,18 @@ local function straightenImages()
     end)
   end
 
+  local function hasTransform(settings)
+    -- Returns whether an Upright or Transform operation has been performed on the photo
+    return
+      (settings.PerspectiveUpright    or 0) ~=   0 or
+      (settings.PerspectiveVertical   or 0) ~=   0 or
+      (settings.PerspectiveHorizontal or 0) ~=   0 or
+      (settings.PerspectiveRotate     or 0) ~=   0 or
+      (settings.PerspectiveAspect     or 0) ~=   0 or
+      (settings.PerspectiveScale      or 0) ~= 100 or
+      (settings.PerspectiveX          or 0) ~=   0 or
+      (settings.PerspectiveY          or 0) ~=   0
+  end
   -- Get selected photos
   local selectedPhotos = catalog:getTargetPhotos()
 
@@ -257,7 +269,7 @@ local function straightenImages()
     -- Retrieve existing crop angle of photo
     local settings = photo:getDevelopSettings()
     local cropAngle = settings.CropAngle or 0
-    local transformEnabled = settings.EnableTransform
+    local photoTransformed = hasTransform(settings)
 
     -- Retrieve RollAngle information from metadata, normalize and apply correction
     local rollAngle, status, message = getRollAngleCW(photo)
@@ -265,7 +277,7 @@ local function straightenImages()
       local straightenAngle = calculateStraightenAngle(rollAngle)
       message = filename .. message .. string.format("Straightening correction of %.2f°", straightenAngle)
       if cropAngle == 0 or prefs.overwriteCropAngle then
-        if not transformEnabled then
+        if not photoTransformed then
         if not prefs.straightenLimits
         or ((math.abs(straightenAngle) >= prefs.straightenLimitLow)
         and (math.abs(straightenAngle) <= prefs.straightenLimitHigh)) then
