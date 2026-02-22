@@ -66,7 +66,7 @@ FocusPointPrefs.kbdInputSmall      = 1
 FocusPointPrefs.kbdInputRegular    = 2
 
 -- URL to handle Update mechanism
-FocusPointPrefs.latestReleaseURL   = "https://github.com/musselwhizzle/Focus-Points/releases/latest"
+FocusPointPrefs.latestReleaseURL   = "https://github.com/musselwhizzle/Focus-Points/releases/"
 
 FocusPointPrefs.masterVersionFile  = "https://raw.githubusercontent.com/musselwhizzle/Focus-Points/master/focuspoints.lrplugin/Version.txt"
 FocusPointPrefs.latestVersionFile  = "https://raw.githubusercontent.com/musselwhizzle/Focus-Points/master/focuspoints.lrplugin/Version.txt"
