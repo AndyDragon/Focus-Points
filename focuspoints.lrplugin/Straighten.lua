@@ -170,7 +170,11 @@ local function straightenImages()
     -- Find nearest multiple of 90°
     local baseOrientation = math.floor((rollAngle / 90) + 0.5) * 90
     -- Compute residual correction
+    if prefs.straightenApplyBias then
+      return baseOrientation - rollAngle + prefs.straightenBias
+    else
     return baseOrientation - rollAngle
+    end
   end
 
   local function getRollAngleCW(photo)
@@ -253,6 +257,7 @@ local function straightenImages()
     -- Retrieve existing crop angle of photo
     local settings = photo:getDevelopSettings()
     local cropAngle = settings.CropAngle or 0
+    local transformEnabled = settings.EnableTransform
 
     -- Retrieve RollAngle information from metadata, normalize and apply correction
     local rollAngle, status, message = getRollAngleCW(photo)
@@ -260,6 +265,7 @@ local function straightenImages()
       local straightenAngle = calculateStraightenAngle(rollAngle)
       message = filename .. message .. string.format("Straightening correction of %.2f°", straightenAngle)
       if cropAngle == 0 or prefs.overwriteCropAngle then
+        if not transformEnabled then
         if not prefs.straightenLimits
         or ((math.abs(straightenAngle) >= prefs.straightenLimitLow)
         and (math.abs(straightenAngle) <= prefs.straightenLimitHigh)) then
@@ -268,6 +274,11 @@ local function straightenImages()
           stats.corrected = stats.corrected + 1
         else
           Log.logInfo("Straighten", message .. " not applied (value exceeds user-defined limits)")
+            stats.skipped = stats.skipped + 1
+          end
+        else
+          message = message .. " not applied (Transform applied already)"
+          Log.logInfo("Straighten", message)
           stats.skipped = stats.skipped + 1
         end
       else

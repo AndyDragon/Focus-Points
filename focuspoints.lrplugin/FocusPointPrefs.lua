@@ -113,22 +113,24 @@ local bind = LrView.bind
 ------------------------------------------------------------------------------]]
 function FocusPointPrefs.InitializePrefs(prefs)
   -- Set any undefined properties to their default values
-  if not prefs.screenScaling              then prefs.screenScaling              = 0 end
-  if not prefs.pluginWindowScaling        then prefs.pluginWindowScaling        = FocusPointPrefs.pluginWindowL end
-  if     prefs.truncateLongText   == nil  then prefs.truncateLongText           = true      end
-  if not prefs.truncateLimit              then prefs.truncateLimit              = 32        end
-  if not prefs.focusBoxSize               then prefs.focusBoxSize               = FocusPointPrefs.focusBoxSize[FocusPointPrefs.initfocusBoxSize] end
-  if not prefs.focusBoxColor              then prefs.focusBoxColor              = "red"     end
-  if     prefs.taggingControls    == nil  then prefs.taggingControls            = true      end
-  if     prefs.keyboardLayout     == nil  then prefs.keyboardLayout             = KeyboardLayout.autoDetectLayout end
-  if not prefs.loggingLevel               then prefs.loggingLevel               = "AUTO"    end
-  if     prefs.overwriteCropAngle == nil  then prefs.overwriteCropAngle         = false     end
-  if     prefs.straightenLimits   == nil  then prefs.straightenLimits           = false     end
-  if not prefs.straightenLimitLow         then prefs.straightenLimitLow         = -0        end
-  if not prefs.straightenLimitHigh        then prefs.straightenLimitHigh        =  45       end
-  if not prefs.straightenSummaryCondition then prefs.straightenSummaryCondition = "SKIPPED" end
-  if     prefs.checkForUpdates    == nil  then prefs.checkForUpdates            = true      end   -- here we need a nil pointer check!!
-  if     prefs.keyboardInput      == nil  then prefs.keyboardInput              = FocusPointPrefs.kbdInputRegular end
+  if not prefs.screenScaling               then prefs.screenScaling              = 0 end
+  if not prefs.pluginWindowScaling         then prefs.pluginWindowScaling        = FocusPointPrefs.pluginWindowL end
+  if     prefs.truncateLongText    == nil  then prefs.truncateLongText           = true      end
+  if not prefs.truncateLimit               then prefs.truncateLimit              = 32        end
+  if not prefs.focusBoxSize                then prefs.focusBoxSize               = FocusPointPrefs.focusBoxSize[FocusPointPrefs.initfocusBoxSize] end
+  if not prefs.focusBoxColor               then prefs.focusBoxColor              = "red"     end
+  if     prefs.taggingControls     == nil  then prefs.taggingControls            = true      end
+  if     prefs.keyboardLayout      == nil  then prefs.keyboardLayout             = KeyboardLayout.autoDetectLayout end
+  if not prefs.loggingLevel                then prefs.loggingLevel               = "AUTO"    end
+  if     prefs.overwriteCropAngle  == nil  then prefs.overwriteCropAngle         = false     end
+  if     prefs.straightenLimits    == nil  then prefs.straightenLimits           = false     end
+  if not prefs.straightenLimitLow          then prefs.straightenLimitLow         = -0        end
+  if not prefs.straightenLimitHigh         then prefs.straightenLimitHigh        =  45       end
+  if not prefs.straightenSummaryCondition  then prefs.straightenSummaryCondition = "SKIPPED" end
+  if     prefs.straightenApplyBias == nil  then prefs.straightenApplyBias        = false     end
+  if not prefs.straightenBias              then prefs.straightenBias             = 0.0       end
+  if     prefs.checkForUpdates     == nil  then prefs.checkForUpdates            = true      end   -- here we need a nil pointer check!!
+  if     prefs.keyboardInput       == nil  then prefs.keyboardInput              = FocusPointPrefs.kbdInputRegular end
   -- get the latest plugin version for update checks
   FocusPointPrefs.retrieveVersionOfLatestRelease()
 end
@@ -624,7 +626,7 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
           }
         },
         f:static_text {
-          title = 'Overwrite existing crop angle setting'
+          title = 'Overwrite existing crop angle setting',
         },
       },
       f:row {
@@ -632,10 +634,10 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
         spacing = f:control_spacing(),
         f:popup_menu {
           title = "straightenLimits",
-          value = bind ("straightenLimits"),
+          value = bind("straightenLimits"),
           width = dropDownWidth,
           items = {
-            { title = "On",  value = true  },
+            { title = "On", value = true },
             { title = "Off", value = false },
           },
         },
@@ -643,7 +645,7 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
           title = 'Limit correction to angles between'
         },
         f:edit_field {
-          value = bind ("straightenLimitLow"),
+          value = bind("straightenLimitLow"),
           width_in_chars = 3,
           min = 0,
           max = 45,
@@ -653,7 +655,7 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
           title = 'and',
         },
         f:edit_field {
-          value = bind ("straightenLimitHigh"),
+          value = bind("straightenLimitHigh"),
           width_in_chars = 3,
           min = 0,
           max = 45,
@@ -671,15 +673,41 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
           value = bind('straightenSummaryCondition'),
           width = dropDownWidth,
           items = {
-            { title = "Always",         value = "ALWAYS" },
+            { title = "Always", value = "ALWAYS" },
             { title = "Skipped Images", value = "SKIPPED" },
-            { title = "Warnings",       value = "WARNINGS" },
-            { title = "Errors",         value = "ERRORS" },
-            { title = "Never",          value = "NEVER" },
+            { title = "Warnings", value = "WARNINGS" },
+            { title = "Errors", value = "ERRORS" },
+            { title = "Never", value = "NEVER" },
           }
         },
         f:static_text {
           title = 'Condition to open the summary dialog when straightening is complete'
+        },
+      },
+      f:row {
+        bind_to_object = prefs,
+        spacing = f:control_spacing(),
+        f:popup_menu {
+          title = "straightenApplyBias",
+          value = bind("straightenApplyBias"),
+          width = dropDownWidth,
+          items = {
+            { title = "On", value = true },
+            { title = "Off", value = false },
+          },
+        },
+        f:static_text {
+          title = 'Apply additional correction of'
+        },
+        f:edit_field {
+          value = bind("straightenBias"),
+          width_in_chars = 4,
+          min = -5,
+          max = 5,
+          precision = 2,
+        },
+        f:static_text {
+          title = 'degrees to compensate for improper calibration of level gauge',
         },
       },
     }

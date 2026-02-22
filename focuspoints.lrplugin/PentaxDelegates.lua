@@ -734,9 +734,10 @@ local function getDriveMode(driveModeValue)
   else
     result = v0
   end
-  if v1 ~= "No Timer"        then result = result .. "; " .. v1 end
-  if v2 ~= "Shutter Button"  then result = result .. "; " .. v2 end
-  if v3 ~= "Single Exposure" then result = result .. "; " .. v3 end
+  -- Skip the default settings that create 'visual noise' rather than added value
+  if v1 and v1 ~= "No Timer"        then result = result .. "; " .. v1 end
+  if v2 and v2 ~= "Shutter Button"  then result = result .. "; " .. v2 end
+  if v3 and v3 ~= "Single Exposure" then result = result .. "; " .. v3 end
 
   return Utils.wrapText(result, {";"}, FocusInfo.maxValueLen)
 end
