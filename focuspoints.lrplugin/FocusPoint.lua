@@ -75,6 +75,7 @@ local function showFocusPoint()
     local switchedToLibrary
     local userResponse
     local exitPlugin
+    local clicked
     local prefs = LrPrefs.prefsForPlugin( nil )
     local props = LrBinding.makePropertyTable(context)
     local LR5 = (LrApplication.versionTable().major == 5) -- or true -- to simulate running on LR5
@@ -470,7 +471,6 @@ local function showFocusPoint()
       local f = LrView.osFactory()
       props.fileName = ""
       props.fileNameTooltip = ""
-      props.clicked = false
       return f:row {
         margin = 0,
         spacing = 0,     -- removes uniform spacing; we control it manually
@@ -480,8 +480,7 @@ local function showFocusPoint()
           enabled = #selectedPhotos > 1 or not LR5,
           action = function(button)
             -- Prevent multiple executions - known LrC SDK quirk!
-            if props.clicked then return end
-            props.clicked = true
+            if clicked then return else clicked = true end
             LrDialogs.stopModalWithResult(button, "previous")
           end
         },
@@ -499,8 +498,7 @@ local function showFocusPoint()
           margin = 0,
           action = function(button)
             -- Prevent multiple executions - known LrC SDK quirk!
-            if props.clicked then return end
-            props.clicked = true
+            if clicked then return else clicked = true end
             -- set index to next image, wrap around at end of list
             LrDialogs.stopModalWithResult(button, "next")
           end
@@ -780,6 +778,7 @@ local function showFocusPoint()
         Log.logInfo("FocusPoint", "Present dialog and information")
 
         local f = LrView.osFactory()
+        clicked = false
         userResponse = LrDialogs.presentModalDialog {
           title = "Focus-Points (Version " .. GlobalDefs.pluginDisplayVersion .. ")",
           contents = FocusPointDialog.createDialog(targetPhoto, photoView, infoView, kbdShortcutInput),

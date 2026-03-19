@@ -93,7 +93,7 @@ local metaKeyCAfPointsInFocus     = "CAF Points In Focus"
 local metaKeyFaceDetectFrameSize  = "Face Detect Frame Size"
 local metaKeyFacesDetected        = "Faces Detected"
 local metaKeyFaceInfoK3III        = "Face Info K3 III"
-local metaKeyAfInfo               = "AF Info"
+local metaKeyAfInfoK3III          = "AF Info K3 III"
 local metaKeySubjectRecognition   = "Subject Recognition"
 local metaKeyAFHold               = "AFC Hold"
 local metaKeyFocusSensitivity     = "AFC Sensitivity"
@@ -196,10 +196,10 @@ function getK3iiiAfPoints(photo, metadata)
   local imageSize = {orgPhotoWidth, orgPhotoHeight}
 
   -- Fetch afInfo from metadata and store as table
-  local afInfo = ExifUtils.findValue(metadata, metaKeyAfInfo)
+  local afInfo = ExifUtils.findValue(metadata, metaKeyAfInfoK3III)
   if afInfo then
     Log.logInfo("Pentax",string.format(
-      "Tag '%s' found: %s", metaKeyAfInfo, afInfo))
+      "Tag '%s' found: %s", metaKeyAfInfoK3III, afInfo))
     afInfo = Utils.splitTrim(afInfo, " ")
   else
     Log.logError("Pentax","No AF information found")
@@ -337,7 +337,7 @@ function getK3iiiAfPoints(photo, metadata)
 
   if not FocusInfo.focusPointsDetected then
     Log.logWarn("Pentax",string.format(
-      "Tag '%s' does not contain any in-focus points/areas", metaKeyAfInfo))
+      "Tag '%s' does not contain any in-focus points/areas", metaKeyAfInfoK3III))
   end
 
   return result

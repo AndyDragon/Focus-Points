@@ -38,7 +38,8 @@ local Log               = require 'Log'
 local _strict           = require 'strict'
 local Utils             = require 'Utils'
 
-ExifUtils.metaValueNA   = "N/A"
+ExifUtils.metaKeyExifToolVersion = "ExifTool Version Number"
+ExifUtils.metaValueNA            = "N/A"
 
 -- Local variables -------------------------------------------------------------
 local exiftool           = LrPathUtils.child( _PLUGIN.path, "bin" )
@@ -51,116 +52,6 @@ exiftoolWindows          = LrPathUtils.child(exiftoolWindows, "exiftool.exe")
 local exiftoolConfigFile = LrPathUtils.child( _PLUGIN.path, "ExifTool.config" )
 
 local metadataFileName   = Utils.getTempFileName()
-
---[[----------------------------------------------------------------------------
-  public string
-  getPhotoFileName(table photo)
-
-  Retrieve the name of the current photo, used by centralized error handling
-------------------------------------------------------------------------------]]
-function ExifUtils.getMetadataFileName()
-  return metadataFileName
-end
-
---[[----------------------------------------------------------------------------
-  public string
-  getPhotoFileName(table photo)
-
-  Retrieve the name of the current photo, used by centralized error handling
-------------------------------------------------------------------------------]]
-function ExifUtils.filterInput(str)
-  local result = string.gsub(str, "[^a-zA-Z0-9 ,\\./;'\\<>\\?:\\\"\\{\\}\\|!@#\\$%\\^\\&\\*\\(\\)_\\+\\=-\\[\\]~`]", "?");
-  return result
-end
-
---[[----------------------------------------------------------------------------
-@TODO
-  public string cmd, string outputFileName
-  getPhotoFileName(table photo)
-
-  Depending on the OS (WIN or MAC), the ExifTool command line is built to read
-  metadata from the photo's image file and write the output to a text file.
-  Returns the command line string and the name of the output file.
-------------------------------------------------------------------------------]]
-local function getExifCmd(targetPhoto)
-  local path = targetPhoto:getRawMetadata("path")
-  local singleQuoteWrap = '\'"\'"\''
-  local options = '-a -u -sort --XMP-crs:all --XMP-crss:all'
-  local cmd
-  if WIN_ENV then
-    -- WIN needs " around the entire command and then " around each path
-    -- Example: ""C:\Users\Joshua\Desktop\Focus Points\focuspoints.lrdevplugin\bin\exiftool.exe" -a -u -sort "C:\Users\Joshua\Desktop\DSC_4636.NEF" > "C:\Users\Joshua\Desktop\DSC_4636-metadata.txt""
---  cmd = '""' .. exiftoolWindows .. '"' .. config ..  '"' .. exiftoolConfigFile .. '"' .. options .. '"'.. path .. '" > "' .. metadataFileName .. '""'
-    cmd = string.format(
-      '""%s" -config "%s" %s "%s" > "%s""',
-      exiftoolWindows, exiftoolConfigFile, options, path, metadataFileName)
-  else
-    exiftool           = string.gsub(exiftool,           "'", singleQuoteWrap)
-    exiftoolConfigFile = string.gsub(exiftoolConfigFile, "'", singleQuoteWrap)
-    path               = string.gsub(path,               "'", singleQuoteWrap)
---  cmd = "'".. exiftool .. "'" .. options .. "'" .. path .. "' > '" .. metadataFileName .. "'"
-    cmd = string.format(
-      "'%s' -config '%s' %s '%s' > '%s'",
-      exiftool, exiftoolConfigFile, options, path, metadataFileName)
-  end
-
-  return cmd, metadataFileName
-end
-
---[[----------------------------------------------------------------------------
-  public string
-  readMetadata(table photo)
-
-  Use the ExifTool command to read the metadata from the image file and write the
-  output to a text file.
-  Returns the output as string.
-------------------------------------------------------------------------------]]
-function ExifUtils.readMetadata(targetPhoto)
-  local cmd, outputFileName = getExifCmd(targetPhoto)
-  local rc = LrTasks.execute(cmd)
-
-  -- Avoid Windows process queue saturation
-  if WIN_ENV then
-      LrTasks.sleep(0.02)
-      LrTasks.yield()
-  end
-
-  Log.logDebug("ExifUtils", "ExifTool command: " .. cmd)
-  if rc ~= 0 then
-    -- something went wrong
-    local errorText = "FATAL error: unable to read photo metadata (ExifTool rc=" .. rc .. ")"
-    Log.logError("ExifUtils", errorText)
-    LrErrors.throwUserError(
-      string.format("%s\n\n%s", Utils.getPhotoFileName(targetPhoto), errorText))
-  else
-    local fileInfo = LrFileUtils.readFile(outputFileName)
-    return fileInfo
-  end
-end
-
---[[----------------------------------------------------------------------------
-  public table
-  readMetadataAsTable(table photo)
-
-  Transforms the output of readMetadata() and returns a key/value table
-------------------------------------------------------------------------------]]
-function ExifUtils.readMetadataAsTable(targetPhoto)
-  local metadata = ExifUtils.readMetadata(targetPhoto)
-  if metadata == nil then
-    return nil
-  end
-
-  local parsedTable = {}
-
-  for keyword, value in string.gmatch(metadata, "([^\:]+)\:([^\r\n]*)\r?\n") do
-    keyword = LrStringUtils.trimWhitespace(keyword)
-    value = LrStringUtils.trimWhitespace(value)
-    parsedTable[keyword] = value
-    Log.logFull("ExifUtils", "Parsed '" .. keyword .. "' = '" .. value .. "'")
-  end
-
-  return parsedTable
-end
 
 --[[----------------------------------------------------------------------------
   public string
@@ -265,6 +156,123 @@ function ExifUtils.getBinaryValue(photo, key)
   end
 
   return result, rc
+end
+
+--[[----------------------------------------------------------------------------
+  public string
+  getPhotoFileName(table photo)
+
+  Retrieve the name of the current photo, used by centralized error handling
+------------------------------------------------------------------------------]]
+function ExifUtils.getMetadataFileName()
+  return metadataFileName
+end
+
+--[[----------------------------------------------------------------------------
+  public string
+  getPhotoFileName(table photo)
+
+  Retrieve the name of the current photo, used by centralized error handling
+------------------------------------------------------------------------------]]
+function ExifUtils.filterInput(str)
+  local result = string.gsub(str, "[^a-zA-Z0-9 ,\\./;'\\<>\\?:\\\"\\{\\}\\|!@#\\$%\\^\\&\\*\\(\\)_\\+\\=-\\[\\]~`]", "?");
+  return result
+end
+
+--[[----------------------------------------------------------------------------
+@TODO
+  public string cmd, string outputFileName
+  getPhotoFileName(table photo)
+
+  Depending on the OS (WIN or MAC), the ExifTool command line is built to read
+  metadata from the photo's image file and write the output to a text file.
+  Returns the command line string and the name of the output file.
+------------------------------------------------------------------------------]]
+local function getExifCmd(targetPhoto)
+  local path = targetPhoto:getRawMetadata("path")
+  local singleQuoteWrap = '\'"\'"\''
+  local options = '-a -u -sort --XMP-crs:all --XMP-crss:all'
+  local cmd
+  if WIN_ENV then
+    -- WIN needs " around the entire command and then " around each path
+    -- Example: ""C:\Users\Joshua\Desktop\Focus Points\focuspoints.lrdevplugin\bin\exiftool.exe" -a -u -sort "C:\Users\Joshua\Desktop\DSC_4636.NEF" > "C:\Users\Joshua\Desktop\DSC_4636-metadata.txt""
+--  cmd = '""' .. exiftoolWindows .. '"' .. config ..  '"' .. exiftoolConfigFile .. '"' .. options .. '"'.. path .. '" > "' .. metadataFileName .. '""'
+    cmd = string.format(
+      '""%s" -config "%s" %s "%s" > "%s""',
+      exiftoolWindows, exiftoolConfigFile, options, path, metadataFileName)
+  else
+    exiftool           = string.gsub(exiftool,           "'", singleQuoteWrap)
+    exiftoolConfigFile = string.gsub(exiftoolConfigFile, "'", singleQuoteWrap)
+    path               = string.gsub(path,               "'", singleQuoteWrap)
+--  cmd = "'".. exiftool .. "'" .. options .. "'" .. path .. "' > '" .. metadataFileName .. "'"
+    cmd = string.format(
+      "'%s' -config '%s' %s '%s' > '%s'",
+      exiftool, exiftoolConfigFile, options, path, metadataFileName)
+  end
+
+  return cmd, metadataFileName
+end
+
+--[[----------------------------------------------------------------------------
+  public string
+  readMetadata(table photo)
+
+  Use the ExifTool command to read the metadata from the image file and write the
+  output to a text file.
+  Returns the output as string.
+------------------------------------------------------------------------------]]
+function ExifUtils.readMetadata(targetPhoto)
+  local cmd, outputFileName = getExifCmd(targetPhoto)
+  local rc = LrTasks.execute(cmd)
+
+  -- Avoid Windows process queue saturation
+  if WIN_ENV then
+      LrTasks.sleep(0.02)
+      LrTasks.yield()
+  end
+
+  Log.logDebug("ExifUtils", "ExifTool command: " .. cmd)
+  if rc ~= 0 then
+    -- something went wrong
+    local errorText = "FATAL error: unable to read photo metadata (ExifTool rc=" .. rc .. ")"
+    Log.logError("ExifUtils", errorText)
+    LrErrors.throwUserError(
+      string.format("%s\n\n%s", Utils.getPhotoFileName(targetPhoto), errorText))
+  else
+    local fileInfo = LrFileUtils.readFile(outputFileName)
+    return fileInfo
+  end
+end
+
+--[[----------------------------------------------------------------------------
+  public table
+  readMetadataAsTable(table photo)
+
+  Transforms the output of readMetadata() and returns a key/value table
+------------------------------------------------------------------------------]]
+function ExifUtils.readMetadataAsTable(targetPhoto)
+  local metadata = ExifUtils.readMetadata(targetPhoto)
+  if metadata == nil then
+    return nil
+  end
+
+  local parsedTable = {}
+  local numEntries = 0
+
+  for keyword, value in string.gmatch(metadata, "([^\:]+)\:([^\r\n]*)\r?\n") do
+    keyword = LrStringUtils.trimWhitespace(keyword)
+    value = LrStringUtils.trimWhitespace(value)
+    parsedTable[keyword] = value
+    numEntries = numEntries + 1
+    Log.logFull("ExifUtils", "Parsed '" .. keyword .. "' = '" .. value .. "'")
+  end
+
+  Log.logInfo("ExifUtils", string.format(
+    "Running ExifTool version %s to read metadata from image file: %s tags found",
+    ExifUtils.findValue(parsedTable, ExifUtils.metaKeyExifToolVersion), numEntries)
+  )
+
+  return parsedTable
 end
 
 --[[----------------------------------------------------------------------------

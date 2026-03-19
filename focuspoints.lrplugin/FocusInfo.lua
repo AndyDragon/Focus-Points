@@ -369,7 +369,7 @@ local function pluginStatus()
           immediate = true,
           mouse_down = function(_view)
             LrTasks.startAsyncTask(function()
-              LrHttp.openUrlInBrowser( FocusPointPrefs.latestReleaseURL )
+              LrHttp.openUrlInBrowser( FocusPointPrefs.getReleaseURL() )
             end)
           end,
         },
@@ -377,7 +377,7 @@ local function pluginStatus()
         f:push_button {
           title = "Open URL",
           font = "<system>",
-          action = function() LrHttp.openUrlInBrowser( FocusPointPrefs.latestReleaseURL ) end,
+          action = function() LrHttp.openUrlInBrowser( FocusPointPrefs.getReleaseURL() ) end,
         },
       }
     else

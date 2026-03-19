@@ -66,7 +66,8 @@ FocusPointPrefs.kbdInputSmall      = 1
 FocusPointPrefs.kbdInputRegular    = 2
 
 -- URL to handle Update mechanism
-FocusPointPrefs.latestReleaseURL   = "https://github.com/musselwhizzle/Focus-Points/releases/"
+FocusPointPrefs.urlLatestRelease   = "https://github.com/musselwhizzle/Focus-Points/releases/latest/"
+FocusPointPrefs.urlReleases        = "https://github.com/musselwhizzle/Focus-Points/releases/"
 
 FocusPointPrefs.masterVersionFile  = "https://raw.githubusercontent.com/musselwhizzle/Focus-Points/master/focuspoints.lrplugin/Version.txt"
 FocusPointPrefs.latestVersionFile  = "https://raw.githubusercontent.com/musselwhizzle/Focus-Points/master/focuspoints.lrplugin/Version.txt"
@@ -360,6 +361,24 @@ function FocusPointPrefs.isUpdateAvailable()
 end
 
 --[[----------------------------------------------------------------------------
+  public boolean
+  getReleaseURL()
+
+  For a pre-release,    returns ./releases
+  For a public release, returns ./releases/latest
+------------------------------------------------------------------------------]]
+function FocusPointPrefs.getReleaseURL()
+  local pluginVersion = Info.VERSION
+  if tonumber(pluginVersion.build) >= 9000 then
+    -- pre-release
+    return FocusPointPrefs.urlReleases
+  else
+    -- public release
+    return FocusPointPrefs.urlLatestRelease
+  end
+end
+
+--[[----------------------------------------------------------------------------
   public table
   genSectionsForBottomOfDialog( table viewFactory, propertyTable )
 
@@ -382,7 +401,7 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
         f:spacer{fill_horizontal = 1},
         f:push_button {
           title = "Open URL",
-          action = function() LrHttp.openUrlInBrowser( FocusPointPrefs.latestReleaseURL ) end,
+          action = function() LrHttp.openUrlInBrowser( FocusPointPrefs.getReleaseURL() ) end,
         },
       }
   else
@@ -642,7 +661,7 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
           },
         },
         f:static_text {
-          title = 'Limit correction to angles between'
+          title = 'Apply straightening only for angles between'
         },
         f:edit_field {
           value = bind("straightenLimitLow"),
@@ -669,6 +688,32 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
         bind_to_object = prefs,
         spacing = f:control_spacing(),
         f:popup_menu {
+          title = "straightenApplyBias",
+          value = bind("straightenApplyBias"),
+          width = dropDownWidth,
+          items = {
+            { title = "On", value = true },
+            { title = "Off", value = false },
+          },
+        },
+        f:static_text {
+          title = 'Apply calibration offset of'
+        },
+        f:edit_field {
+          value = bind("straightenBias"),
+          width_in_chars = 4,
+          min = -5,
+          max = 5,
+          precision = 2,
+        },
+        f:static_text {
+          title = 'to roll angle',
+        },
+      },
+      f:row {
+        bind_to_object = prefs,
+        spacing = f:control_spacing(),
+        f:popup_menu {
           title = "Straighten Summary Condition",
           value = bind('straightenSummaryCondition'),
           width = dropDownWidth,
@@ -682,32 +727,6 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
         },
         f:static_text {
           title = 'Condition to open the summary dialog when straightening is complete'
-        },
-      },
-      f:row {
-        bind_to_object = prefs,
-        spacing = f:control_spacing(),
-        f:popup_menu {
-          title = "straightenApplyBias",
-          value = bind("straightenApplyBias"),
-          width = dropDownWidth,
-          items = {
-            { title = "On", value = true },
-            { title = "Off", value = false },
-          },
-        },
-        f:static_text {
-          title = 'Apply additional correction of'
-        },
-        f:edit_field {
-          value = bind("straightenBias"),
-          width_in_chars = 4,
-          min = -5,
-          max = 5,
-          precision = 2,
-        },
-        f:static_text {
-          title = 'degrees to compensate for improper calibration of level gauge',
         },
       },
     }
@@ -747,7 +766,14 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
         },
         f:column {
           f:static_text {
-            title = "https://imagemagick.org/index.php"
+            title = "https://imagemagick.org/index.php",
+            text_color = LrColor(0, 0.25, 1),
+            immediate = true,
+            mouse_down = function(_view)
+              LrTasks.startAsyncTask(function()
+                LrHttp.openUrlInBrowser("https://imagemagick.org/index.php")
+              end)
+            end,
           },
         },
       },
@@ -767,7 +793,41 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
         },
         f:column {
           f:static_text {
-            title = "https://exiftool.org/"
+            title = "https://exiftool.org/",
+            text_color = LrColor(0, 0.25, 1),
+            immediate = true,
+            mouse_down = function(_view)
+              LrTasks.startAsyncTask(function()
+                LrHttp.openUrlInBrowser("https://exiftool.org/")
+              end)
+            end,
+          },
+        },
+      },
+      f:spacer{fill_horizontal = 1},
+      f:row {
+        fill_horizontal = 1,
+        f:column {
+          fill_horizontal = 1,
+          f:static_text {
+            font = "<system/bold>",
+            title = 'John R. Ellis'
+          },
+          f:spacer{ height = 5 },
+          f:static_text {
+            title = "Permission to use code to crop an image while maintaining its aspect ratio"
+          }
+        },
+        f:column {
+          f:static_text {
+            title = "https://johnrellis.com/lightroom/allplugins.htm",
+            text_color = LrColor(0, 0.25, 1),
+            immediate = true,
+            mouse_down = function(_view)
+              LrTasks.startAsyncTask(function()
+                LrHttp.openUrlInBrowser("https://johnrellis.com/lightroom/allplugins.htm")
+              end)
+            end,
           },
         },
       },

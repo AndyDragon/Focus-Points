@@ -33,6 +33,7 @@ local LrTasks               = import  'LrTasks'
 local LrView                = import  'LrView'
 
 -- Required Lua definitions
+local Crop                  = require 'Crop'
 local ExifUtils             = require 'ExifUtils'
 local FocusPointPrefs       = require 'FocusPointPrefs'
 local Log                   = require 'Log'
@@ -179,7 +180,7 @@ local function straightenImages()
 
   local function getRollAngleCW(photo)
     -- Retrieve the 'RollAngle' tag from the photo's metadata and return its value in clockwise (CW) degrees.
-    -- Some camera makersrecord the camera roll angle clockwise (CW), while others record it counterclockwise (CCW).
+    -- Some camera makers record the camera roll angle clockwise (CW), while others record it counterclockwise (CCW).
     local make = photo:getFormattedMetadata("cameraMake")
     local rollAngle = 0
     local rc
@@ -197,7 +198,7 @@ local function straightenImages()
             -- makes that record angle value counterclockwise
             rollAngle = rollAngle * -1
           end
-          return rollAngle, SUCCESS, string.format("RollAngle %.2f°. ", rollAngle)
+          return rollAngle, SUCCESS, string.format("RollAngle %7.2f°. ", rollAngle)
         else
           return 0, WARNING, "No RollAngle information found in metadata"
         end
@@ -208,14 +209,18 @@ local function straightenImages()
   end
 
   local function straightenImage(photo, angle)
-    -- Apply straightening correction to the photo
+    local crop = Crop.ofPhoto(photo)
+    if crop then
+      crop = Crop.adjustAngle (crop, angle)
+--    LrTasks.sleep(0.02)
+--    LrTasks.yield()
     catalog:withWriteAccessDo("Straighten Images", function()
-      photo:applyDevelopSettings {
-        HasCrop = true,
-        CropConstrainToWarp = true,
-        CropAngle = angle * -1,
-      }
+        Crop.apply (crop, photo, "Straighten Image")
     end)
+      return true
+    else
+      return false
+    end
   end
 
   local function hasTransform(settings)
@@ -229,6 +234,10 @@ local function straightenImages()
       (settings.PerspectiveScale      or 0) ~= 100 or
       (settings.PerspectiveX          or 0) ~=   0 or
       (settings.PerspectiveY          or 0) ~=   0
+  end
+  local function floatsEqual(a, b, epsilon)
+    epsilon = epsilon or 1e-4
+    return math.abs(a - b) < epsilon
   end
   -- Get selected photos
   local selectedPhotos = catalog:getTargetPhotos()
@@ -264,7 +273,8 @@ local function straightenImages()
     progress:setCaption(string.format("Processing %d of %d", i, #selectedPhotos))
 
     -- ###
-    local filename = photo:getFormattedMetadata( "fileName" )  .. ":   "
+    local filename = photo:getFormattedMetadata( "fileName" )  .. ":  "
+    filename = filename .. string.rep(" ", 20 - #filename)
 
     -- Retrieve existing crop angle of photo
     local settings = photo:getDevelopSettings()
@@ -275,16 +285,29 @@ local function straightenImages()
     local rollAngle, status, message = getRollAngleCW(photo)
     if status == SUCCESS then
       local straightenAngle = calculateStraightenAngle(rollAngle)
-      message = filename .. message .. string.format("Straightening correction of %.2f°", straightenAngle)
+      message = filename .. message ..
+        string.format("Straightening correction of %6.2f°", straightenAngle)
+      if not floatsEqual(cropAngle, -straightenAngle) then
+        -- don't need to continue in case the crop angle has been 'straightened' already
       if cropAngle == 0 or prefs.overwriteCropAngle then
         if not photoTransformed then
         if not prefs.straightenLimits
         or ((math.abs(straightenAngle) >= prefs.straightenLimitLow)
         and (math.abs(straightenAngle) <= prefs.straightenLimitHigh)) then
-          straightenImage(photo, straightenAngle)
+              if cropAngle ~= 0 then
+                -- Reset crop before "overwriting" crop angle
+                catalog:withWriteAccessDo("Straighten Images", function()
+                  Crop.photoReset(photo)
+                end)
+              end
+              if straightenImage(photo, straightenAngle) then
           Log.logInfo("Straighten", message .. " applied")
           stats.corrected = stats.corrected + 1
         else
+                Log.logError("Straighten", message .. " could not be applied (error occured)")
+                stats.errors = stats.errors + 1
+              end
+            else
           Log.logInfo("Straighten", message .. " not applied (value exceeds user-defined limits)")
             stats.skipped = stats.skipped + 1
           end
@@ -295,6 +318,11 @@ local function straightenImages()
         end
       else
         message = message .. " not applied (non-zero crop angle exists)"
+          Log.logInfo("Straighten", message)
+          stats.skipped = stats.skipped + 1
+        end
+      else
+        message = message .. " not applied (photo already straightened)"
         Log.logInfo("Straighten", message)
         stats.skipped = stats.skipped + 1
       end
