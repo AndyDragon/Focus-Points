@@ -51,15 +51,18 @@ A plugin for Lightroom Classic<sup>1</sup> on Windows and macOS:
 - Show which focus point was active when the picture was taken <sup>2</sup>
 - Display user-selected autofocus points/area <sup>3,4</sup>
 - Visualize faces and subjects detected by the camera <sup>3,5</sup>
-- Tagging (flagging, rating and coloring) of photos within the plugin UI <sup>6</sup>
+- Tagging (flagging, rating and coloring) of photos within the plugin UI <sup>7</sup>
 - Display and search (EXIF) metadata of the selected image 
+- Straightening images by applying compensation for camera roll angle<sup>6</sup>
 
 <sup>1</sup> LR5.7 and LR6 perpetual licenses and LrC subscriptions.<br>
 <sup>2</sup> For Canon, Nikon, Sony, Fuji, Olympus/OM, Panasonic, Pentax, Ricoh, Apple. See full [list of supported cameras](../README.md#supported-cameras).<br>
 <sup>3</sup> Depending on the presence of metadata.<br> 
 <sup>4</sup> Currently supported for Pentax and OM System.<br> 
 <sup>5</sup> Currently supported for Fuji, OM System (subjects, faces) and Sony, Olympus, Pentax (faces).<br> 
-<sup>6</sup> Not for LR5.<br>
+<sup>6</sup> Currently supported for Canon, Nikon, Fuji, Olympus/OM, Panasonic.<br>
+<sup>7</sup> Not for LR5.<br>
+
 
 To understand the principles of this plugin, how to use it and how to interpret the results, **it is recommended that you read chapters 1, 2 and the part of chapter 3 that applies to your camera**.
 <br>
@@ -410,7 +413,86 @@ This has been improved in V3.2:
 
 <br>
 
-## 2.4 Configuration and Settings
+## 2.4 Straighten Images
+
+Straighten Images is a new plugin function in V3.3:
+
+* Library → Plug-in Extras → Straighten Images, or
+* File → Plug-in Extras → Straighten Images
+
+This function reads the camera roll angle from the metadata of the selected photos, one by one, and applies compensation by rotating the photos accordingly.
+
+Straightening individual images manually is not difficult, and Lightroom also supports automatic straightening using the Transform tool. However, the Straighten Image feature can come in handy for straightening a series of photos taken in burst mode, such as wildlife, sports or action shots. This is particularly useful when the captured scenes lack clear reference information to help you (or the Transform tool) straighten the images.
+
+As this function relies on the presence of the `RollAngle` tag in metadata, its application is currently limited to
+
+- Canon (R1, R3 (FW2.0), R5 (FW 1.5), R5m2, R6m2, R7)
+- Nikon (D5, D500 and later models)
+- Fuji (XT-5 and later models)
+- Olympus/OM (EM-1/5/10 III and later models)
+- Panasonic (Lumix G6 and later models)
+
+Example:
+The photo has a roll angle of 2.5°. Applying a crop angle of -2.5° compensates for the tilt. Please note that a non-zero crop angle will change the crop of the photo. Straightening the photo will result in the corners being lost. The result obtained by using the 'Straighten Images' tool is the same as if you enter the roll angle compensation manually in Lightroom's 'Crop & Straighten' tool. This also means, that you can modify or even revert the result by
+
+<img src="../screens/Straighten%201.jpg" alt="User Interface" style="width: 1000px;"/>
+
+
+### Basic Operation
+
+To use the Straighten Images plugin, select the photos you want to straighten and open Plug-in Extras > Straighten Images.
+
+The plugin then processes all the selected photos, retrieving 'RollAngle' information from their metadata if available, and applies the relevant correction by adjusting the crop angle of each photo. The standard progress bar in the top-left corner of Lightroom shows the progress of the operation. You can interrupt the process by clicking the 'x' icon to the right of the progress bar.
+
+<img src="../screens/Straighten%202.jpg" alt="User Interface" style="width: 1000px;"/>
+
+By default, the plugin notifies you of successful completion of the process with a 'bezel' — a brief pop-up window — upon completion.
+
+<img src="../screens/Straighten%203.jpg" alt="User Interface" style="width: 1000px;"/>
+
+If any of the selected photos cannot be straightened, a dialog box will provide a summary. You can configure the conditions that trigger this window.
+
+<img src="../screens/Straighten%204.jpg" alt="User Interface" style="width: 1000px;"/>
+
+If you require more detailed information, you can access it by clicking 'See details', which opens the log file.
+
+<img src="../screens/Straighten%205.jpg" alt="User Interface" style="width: 1000px;"/>
+
+
+### Customization
+
+Various options allow you to customize and fine-tune the process of straightening images:
+
+<img src="../screens/Straighten%206.jpg" alt="User Interface"/>
+
+For a detailed explanation of these settings, see [Straightening Options](#straightening-options)
+
+
+### Keyboard Shortcuts
+
+The FocusPointsHotkey script files and precompiled executables have been extented by a third keyboard shortcut `Ctrl NumpadSub`.
+
+
+### General Remarks
+
+The quality of the result of straightening depends essentially on two factors:
+
+- Precision of roll angle measurement by the camera
+- Accuracy of the camera's level gauge adjustment
+
+The benefits of straightening photos of man-made structures can be limited. In such cases, great precision is often desired, as well as compensation for vertical tilt.
+
+Conversely, the Straighten Images feature is extremely useful for genres such as nature, wildlife, sports and action photography. It is not uncommon to find that there is no clear reference information to help you straighten images manually. This feature is also useful for burst shoots, such as photographing birds in flight, when it is easy to tilt the camera while tracking your subject.
+
+The plugin generally produces better and more reliable level correction results than Lightroom's Auto Transform feature. This is because it responds directly to horizontal camera imbalance. Auto Transform looks for straight lines in a photo and uses them as a reference point to straighten the image. However, if there are structures in an image that are not actually straight, the result will be incorrect.
+
+Lightroom Auto Transform ('Level'):
+<img src="../screens/Straighten%207.jpg" alt="User Interface" style="width: 1000px;"/>
+
+This plugin's Straighten Image function:
+<img src="../screens/Straighten%208.jpg" alt="User Interface" style="width: 1000px;"/>
+
+## 2.5 Configuration and Settings
 
 Selecting 'Focus Point Viewer' from the list of installed plugins (_Library → File → Plug-in Manager_) opens the plugin's settings page:
 
