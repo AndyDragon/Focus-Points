@@ -40,6 +40,7 @@ local Utils             = require 'Utils'
 
 ExifUtils.metaKeyExifToolVersion = "ExifTool Version Number"
 ExifUtils.metaValueNA            = "N/A"
+ExifUtils.metaValueNone          = "(NONE)"
 
 -- Local variables -------------------------------------------------------------
 local exiftool           = LrPathUtils.child( _PLUGIN.path, "bin" )
@@ -57,8 +58,9 @@ local metadataFileName   = Utils.getTempFileName()
   public string
   findValue(table metadata, string key)
 
-  Returns the value of "key" within the metadata table.
-  Ignores nil and "(none)" and "n/a" as valid values.
+  Returns the value of "key" within the metadata table,
+  Returns nil if key was not found or value is "(none)" or "n/a".
+
   metadataTable - the metadata key/value table
   key - the tag name to be searched for
   Returns value of the tag
@@ -70,7 +72,8 @@ function ExifUtils.findValue(metadata, key)
       if (k == key) then
         -- even though we don't return them as a result, we'll log (none) and n/a entries
         Log.logDebug("ExifUtils", "Searching for " .. key .. " -> " .. v)
-        if v and (string.lower(v) ~= "(none)") and (string.lower(v) ~= "n/a") then
+        if v and string.upper(v) ~= ExifUtils.metaValueNone
+             and string.upper(v) ~= ExifUtils.metaValueNA then
           -- this is the only way out with a result!
           return v
         end
@@ -86,7 +89,8 @@ end
   findFirstMatchingValue(metadata, keys)
 
   Returns the first value of "keys" that could be found within the metadata table.
-  Ignores nil and "(none)" as valid values.
+  Returns nil if no key was not found or value is "(none)" or "n/a".
+
   metadata - the metadata key/value table
   keys - the keys to be search for in order of importance
   return 1. value of the first key match, 2. which key was used
@@ -95,7 +99,8 @@ function ExifUtils.findFirstMatchingValue(metadata, keys)
   local exifValue
   for key, value in pairs(keys) do          -- value in the keys table is the current exif keyword to be searched
     exifValue = metadata[value]
-    if exifValue and (string.lower(exifValue) ~= "(none)") and (string.lower(exifValue) ~= "n/a") then
+    if exifValue and string.upper(exifValue) ~= ExifUtils.metaValueNone
+                 and string.upper(exifValue) ~= ExifUtils.metaValueNA then
       Log.logDebug("ExifUtils", "Searching for " .. value .. " -> " .. exifValue)
       return exifValue, keys[key]
     end
@@ -109,8 +114,11 @@ end
   getBinaryValue(table photo, string key)
 
   Retrieves the value for an EXIF tag in binary mode.
-  Useful for tags, where ExifTool produces a simplified or shortened output,
-  e.g. AFPointSelected or FaceDetectArea for Olympus cameras
+  Returns nil if key was not found or value is "(none)" or "n/a".
+
+  This is useful for tags, where ExifTool produces a simplified or shortened output,
+  e.g. AFPointSelected or FaceDetectArea for Olympus cameras.
+  This is alst uses by 'Straighten Images', which requires only a single tag (RollAngle).
 
   Note: This function requires a separate call to ExifTool, which affects runtime performance.
 ------------------------------------------------------------------------------]]
@@ -152,6 +160,11 @@ function ExifUtils.getBinaryValue(photo, key)
     -- Clean up: remove the temp file
     if LrFileUtils.exists(output) and not LrFileUtils.delete(output) then
       Log.logWarn("Utils", "Unable to delete ExifTool output file " .. output)
+    end
+    -- do not return "", "n/a" or "(none)" as a result
+    if result and (result == "" or string.upper(result) == ExifUtils.metaValueNone or
+                                   string.upper(result) == ExifUtils.metaValueNA)  then
+      result = nil
     end
   end
 

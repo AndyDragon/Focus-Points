@@ -707,7 +707,7 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
           precision = 2,
         },
         f:static_text {
-          title = 'to roll angle',
+          title = 'degrees to roll angle',
         },
       },
       f:row {

@@ -182,14 +182,15 @@ local function straightenImages()
     -- Retrieve the 'RollAngle' tag from the photo's metadata and return its value in clockwise (CW) degrees.
     -- Some camera makers record the camera roll angle clockwise (CW), while others record it counterclockwise (CCW).
     local make = photo:getFormattedMetadata("cameraMake")
-    local rollAngle = 0
-    local rc
+
     if not makeSupported(string.lower(make)) then
       return 0, WARNING, string.format("%s not supported", make)
     else
-      rollAngle, rc = ExifUtils.getBinaryValue(photo, "RollAngle")
+      local result, rc = ExifUtils.getBinaryValue(photo, "RollAngle")
       if rc == 0 then
-        if rollAngle ~= "" then
+        if result then
+          local rollAngle = tonumber(result)
+          if rollAngle then
           make = string.lower(make)
           if  make == 'fujifilm' or (string.find(make, "nikon", 1, true)) then
             -- makes that record angle value clockwise
@@ -199,6 +200,10 @@ local function straightenImages()
             rollAngle = rollAngle * -1
           end
           return rollAngle, SUCCESS, string.format("RollAngle %7.2f°. ", rollAngle)
+        else
+            return 0, WARNING, string.format(
+              "Invalid RollAngle information found in metadata: %s", result)
+          end
         else
           return 0, WARNING, "No RollAngle information found in metadata"
         end
@@ -212,8 +217,6 @@ local function straightenImages()
     local crop = Crop.ofPhoto(photo)
     if crop then
       crop = Crop.adjustAngle (crop, angle)
---    LrTasks.sleep(0.02)
---    LrTasks.yield()
     catalog:withWriteAccessDo("Straighten Images", function()
         Crop.apply (crop, photo, "Straighten Image")
     end)
