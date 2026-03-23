@@ -13,8 +13,10 @@ Focus Points – User Manual
 *  [Focus Point Viewer](#22-focus-point-viewer)<br>
    - [User Interface](#user-interface), [User Messages](#user-messages), [Plugin Status](#plugin-status), [Keyboard Shortcuts](#keyboard-shortcuts) 
 *  [Metadata Viewer](#23-metadata-viewer)
-*  [Configuration and Settings](#24-configuration-and-settings)
-   - [Screen Scaling](#screen-scaling), [User Interface](#user-interface-settings), [Viewing Options](#viewing-options), [Logging](#logging), [Update Check](#update-check)
+*  [Straighten Images](#24-straighten-images)
+   - [Operation](#operation), [Customization](#Customization), [Keyboard Shortcut](#keyboard-shortcut), [General Remarks](#general-remarks) 
+*  [Configuration and Settings](#25-configuration-and-settings)
+   - [Screen Scaling](#screen-scaling), [User Interface](#user-interface-settings), [Viewing Options](#viewing-options), [Logging](#logging), [Straightening Options](#straightening-options), [Update Check](#update-check)
 
 ### [Display of Focus Points](#3-display-of-focus-points)
 
@@ -438,7 +440,7 @@ The photo has a roll angle of 2.5°. Applying a crop angle of -2.5° compensates
 <img src="../screens/Straighten%201.jpg" alt="User Interface" style="width: 1000px;"/>
 
 
-### Basic Operation
+### Operation
 
 To use the Straighten Images plugin, select the photos you want to straighten and open Plug-in Extras > Straighten Images.
 
@@ -468,7 +470,7 @@ Various options allow you to customize and fine-tune the process of straightenin
 For a detailed explanation of these settings, see [Straightening Options](#straightening-options)
 
 
-### Keyboard Shortcuts
+### Keyboard Shortcut
 
 The FocusPointsHotkey script files and precompiled executables have been extented by a third keyboard shortcut `Ctrl NumpadSub`.
 
@@ -547,7 +549,7 @@ If you don't need the controls for flagging, rating or coloring photos in the Fo
 The keyboard shortcuts for flagging, rating and coloring are the same as those used in Lightroom, including the `Shift` combinations that perform an action and advance to the next photo. Since the plugin cannot recognize key codes and can only work with text input, using the `Shift` + `0`-`9` keyboard shortcuts requires the plugin to be aware of the currently used international keyboard layout.<br>
 The predefined options cover a large percentage of the available layouts, and more can be added on request. In this specific context, it is important to note that the term 'layout' refers only to the codes produced by the `0`–`9` keys in the top row, and not to the entire keyboard.
 <br><br>
-<img src="../screens/README KeyboardLayoutSettings.jpg" alt="Screenshot" style="width: 600px;"/>
+<img src="../screens/README KeyboardLayoutSettings.jpg" alt="Screenshot"/>
 <br>
 
 ### Viewing Options
@@ -580,7 +582,33 @@ The logging mechanism provides a fine-grained hierarchy of levels at which infor
    | Auto    | Same as 'Info'. Recommended setting. No noticeable slow down of plugin. |
 
 
-<u>Hint</u>: `Auto`logging will start on an empty log file for each image. When you open such a log file, it will immediately focus on the most recent image. The log file will be emptied when the plugin starts for all other logging levels. 
+<u>Hint</u>: `Auto`logging will start on an empty log file for each image. When you open such a log file, it will immediately focus on the most recent image. The log file will be emptied when the plugin starts for all other logging levels.
+
+
+### Straightening Options
+
+These settings control the process of [straightening images](#24-Straighten-images):
+
+<img src="../screens/Settings%20-%20Straightening%20Options.jpg" alt="User Interface"/>
+
+**_Overwrite existing crop angle setting_**. Default setting: `Off`<br>
+Roll angle compensation will be applied regardless of whether the photo has already been rotated. The straightening angle will replace the existing crop angle, rather than being added to it.
+
+**_Apply straightening only for angles between x and y_**. Default setting: `Off`<br>
+Roll angle compensation will only be applied for angles within the range of x to y degrees.  
+You can use this option to define a deadband to prevent small, often invisible, corrections from triggering Lightroom cropping. You can also set an upper limit for straightening angles. For example, if a photo has been taken with the camera tilted 25° horizontally, this is likely to be a deliberate creative choice rather than an unintended tilt. The lower and upper limits apply to both camera directions. (In Lightroom's Crop & Straighten tool, positive values rotate the image clockwise and negative values rotate it counterclockwise).
+  
+Example:  
+Applying straightening only for angles between 0.2° and 10° means that no straightening (and cropping) will occur for angles between -0.2° and 0.2°, or for angles outside the range of -10° to 10°.  
+
+**_Apply calibration offset_**. Default setting: `Off`<br>
+If you are straightening photos captured using an improperly calibrated level gauge, you can specify a calibration offset in degrees here. This offset will be added to the roll angle compensation to compensate for the incorrect calibration of the level gauge. 
+
+**_Condition to open the summary dialog when straightening is complete_**. Default setting: `Skipped Images`<br>
+Specify the least critical condition that will trigger the summary window to open at the end of the straightening process. The dropdown list shows the available conditions in ascending order of criticality.
+
+Example:  
+The default setting, 'Skipped Images', will trigger the summary to show for skipped images, as well as warnings and errors that occurred during the process. Selecting the 'Errors' setting will only show the summary for errors that occurred, but not for warnings or skipped images.
 
 
 ### Update Check
