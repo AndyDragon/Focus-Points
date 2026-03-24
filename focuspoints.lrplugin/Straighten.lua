@@ -57,7 +57,6 @@ local supportedMakes = {
 ------------------------------------------------------------------------------]]
 local function straightenImages()
 
-  if debug then Debug.pauseIfAsked() end
   local catalog = LrApplication.activeCatalog()
   local prefs   = LrPrefs.prefsForPlugin( nil )
 
