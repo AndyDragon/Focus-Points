@@ -43,7 +43,8 @@ local _strict               = require 'strict'
 -- List of camera makers that in principle support a RollAngle tag with consistent information
 -- Some only for recent models e.g. Nikon, others since decades e.g. Canon, Olympus/OM
 local supportedMakes = {
-  'canon', 'nikon', 'nikon corporation', 'fujifilm', 'olympus', 'om digital solutions', 'panasonic'
+  'canon', 'nikon', 'nikon corporation', 'fujifilm', 'olympus', 'om digital solutions',
+  'pentax', 'ricoh', 'panasonic'
 }
 
 --[[----------------------------------------------------------------------------
@@ -56,6 +57,7 @@ local supportedMakes = {
 ------------------------------------------------------------------------------]]
 local function straightenImages()
 
+  if debug then Debug.pauseIfAsked() end
   local catalog = LrApplication.activeCatalog()
   local prefs   = LrPrefs.prefsForPlugin( nil )
 
@@ -67,6 +69,7 @@ local function straightenImages()
   local stats = {
     processed = 0,
     corrected = 0,
+    noactreq  = 0,
     skipped   = 0,
     warnings  = 0,
     errors    = 0,
@@ -124,9 +127,10 @@ local function straightenImages()
   local function showSummary(stats, logFileName)
     -- Determine severity and compose details message
     local message = string.format(
-        "%d photos processed\n%d straightened\n%d skipped",
+      "%d photos processed\n%d straightened\n%d no action required\n%d skipped",
         stats.processed,
         stats.corrected,
+      stats.noactreq,
         stats.skipped
     )
     local severity = "info"
@@ -275,9 +279,10 @@ local function straightenImages()
     progress:setPortionComplete(i - 1, #selectedPhotos)
     progress:setCaption(string.format("Processing %d of %d", i, #selectedPhotos))
 
-    -- ###
-    local filename = photo:getFormattedMetadata( "fileName" )  .. ":  "
-    filename = filename .. string.rep(" ", 20 - #filename)
+    -- Proceed to next photo
+    local filename = photo:getFormattedMetadata( "fileName" )
+    local fileInfo = filename .. ":  " .. string.rep(" ", 20 - #filename)
+    stats.processed = stats.processed + 1
 
     -- Retrieve existing crop angle of photo
     local settings = photo:getDevelopSettings()
@@ -286,57 +291,77 @@ local function straightenImages()
 
     -- Retrieve RollAngle information from metadata, normalize and apply correction
     local rollAngle, status, message = getRollAngleCW(photo)
-    if status == SUCCESS then
-      local straightenAngle = calculateStraightenAngle(rollAngle)
-      message = filename .. message ..
-        string.format("Straightening correction of %6.2f°", straightenAngle)
-      if not floatsEqual(cropAngle, -straightenAngle) then
-        -- don't need to continue in case the crop angle has been 'straightened' already
-      if cropAngle == 0 or prefs.overwriteCropAngle then
-        if not photoTransformed then
-        if not prefs.straightenLimits
-        or ((math.abs(straightenAngle) >= prefs.straightenLimitLow)
-        and (math.abs(straightenAngle) <= prefs.straightenLimitHigh)) then
-              if cropAngle ~= 0 then
-                -- Reset crop before "overwriting" crop angle
-                catalog:withWriteAccessDo("Straighten Images", function()
-                  Crop.photoReset(photo)
-                end)
-              end
-              if straightenImage(photo, straightenAngle) then
-          Log.logInfo("Straighten", message .. " applied")
-          stats.corrected = stats.corrected + 1
-        else
-                Log.logError("Straighten", message .. " could not be applied (error occured)")
-                stats.errors = stats.errors + 1
-              end
-            else
-          Log.logInfo("Straighten", message .. " not applied (value exceeds user-defined limits)")
-            stats.skipped = stats.skipped + 1
-          end
-        else
-          message = message .. " not applied (Transform applied already)"
-          Log.logInfo("Straighten", message)
-          stats.skipped = stats.skipped + 1
-        end
-      else
-        message = message .. " not applied (non-zero crop angle exists)"
-          Log.logInfo("Straighten", message)
-          stats.skipped = stats.skipped + 1
-        end
-      else
-        message = message .. " not applied (photo already straightened)"
-        Log.logInfo("Straighten", message)
-        stats.skipped = stats.skipped + 1
+    repeat  -- until true to support implementation of 'Pythonic' control flow with break statements
+      if status == WARNING then
+        Log.logWarn("Straighten", fileInfo .. message)
+        stats.warnings = stats.warnings + 1
+        break
       end
-    elseif status == WARNING then
-      Log.logWarn("Straighten", filename .. message)
-      stats.warnings = stats.warnings + 1
-    elseif status == ERROR then
-      Log.logError("Straighten", filename .. message)
+      if status == ERROR then
+        Log.logError("Straighten", fileInfo .. message)
+        stats.errors = stats.errors + 1
+        break
+      end
+      -- status == SUCCESS
+      local rollInfo = message
+      local straightenAngle = calculateStraightenAngle(rollAngle)
+      local straightenInfo = string.format("Straightening correction of %6.2f°", straightenAngle)
+
+      if straightenAngle == 0 then
+        Log.logInfo("Straighten", fileInfo .. rollInfo ..
+          "Nothing to do")
+        stats.noactreq = stats.noactreq + 1
+        break
+              end
+      if floatsEqual(cropAngle, -straightenAngle) then
+        Log.logInfo("Straighten", fileInfo .. rollInfo .. straightenInfo ..
+          " not applied (photo already straightened)")
+        stats.noactreq = stats.noactreq + 1
+        break
+              end
+
+      if photoTransformed then
+        Log.logInfo("Straighten", fileInfo .. rollInfo .. straightenInfo ..
+          " not applied (Transform applied already)")
+            stats.skipped = stats.skipped + 1
+        break
+          end
+
+      if cropAngle ~= 0 and not prefs.overwriteCropAngle then
+        Log.logInfo("Straighten", fileInfo .. rollInfo .. straightenInfo ..
+          " not applied (non-zero crop angle exists)")
+          stats.skipped = stats.skipped + 1
+        break
+        end
+
+      if prefs.straightenLimits and
+        ((math.abs(straightenAngle) < prefs.straightenLimitLow) or
+         (math.abs(straightenAngle) > prefs.straightenLimitHigh)) then
+        Log.logInfo("Straighten", fileInfo .. rollInfo .. straightenInfo ..
+          " not applied (value exceeds user-defined limits)")
+          stats.skipped = stats.skipped + 1
+        break
+        end
+
+      if cropAngle ~= 0 then
+        -- Reset existing crop before "overwriting" crop angle
+        catalog:withWriteAccessDo("Straighten Images", function()
+          Crop.photoReset(photo)
+        end)
+      end
+
+      -- All preconditions have been met, so apply the crop finally !!
+      if straightenImage(photo, straightenAngle) then
+        Log.logInfo("Straighten", fileInfo .. rollInfo .. straightenInfo ..
+          " applied")
+        stats.corrected = stats.corrected + 1
+      else
+        Log.logError("Straighten", fileInfo .. rollInfo .. straightenInfo ..
+          " could not be applied (error occured)")
       stats.errors = stats.errors + 1
     end
-    stats.processed = stats.processed + 1
+
+    until true
   end
 
   -- Finish progress bar
