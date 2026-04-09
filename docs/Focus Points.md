@@ -62,7 +62,7 @@ A plugin for Lightroom Classic<sup>1</sup> on Windows and macOS:
 <sup>3</sup> Depending on the presence of metadata.<br> 
 <sup>4</sup> Currently supported for Pentax and OM System.<br> 
 <sup>5</sup> Currently supported for Fuji, OM System (subjects, faces) and Sony, Olympus, Pentax (faces).<br> 
-<sup>6</sup> Currently supported for Canon, Nikon, Fuji, Olympus/OM, Panasonic.<br>
+<sup>6</sup> Currently supported for Canon, Nikon, Fuji, Olympus/OM, Panasonic, Pentax, Ricoh.<br>
 <sup>7</sup> Not for LR5.<br>
 
 
