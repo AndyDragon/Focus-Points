@@ -18,7 +18,7 @@ A plugin for Lightroom Classic<sup>1</sup> on Windows and macOS:
 <sup>6</sup> Currently supported for Canon, Nikon, Fuji, Olympus/OM, Panasonic, Pentax, Ricoh.<br>
 <sup>7</sup> Not for LR5.<br>
 
-## Current Release:
+## Current Release: [V3.3 updated April 9, 2026](https://github.com/musselwhizzle/Focus-Points/releases/latest)
 
 **[Download the latest release](https://github.com/musselwhizzle/Focus-Points/releases/latest)**  or see detailed **[installation instructions](#installation)**.
 
@@ -26,8 +26,6 @@ If you have any questions, comments or suggestions for improving this plugin, pl
 
 To understand the principles of this plugin, how to use it and how to interpret the results, please refer to the **[User Manual](docs/Focus%20Points.md)**. **It is recommended that you read chapters 1, 2 and the part of chapter 3 that applies to your camera**.
 
-
-### [V3.3 updated April 9, 2026](https://github.com/musselwhizzle/Focus-Points/releases/latest)
 
 ### New features and changes:
 
