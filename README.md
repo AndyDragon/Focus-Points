@@ -1,4 +1,6 @@
-# Focus Points
+# Focus Points for Lightroom Classic
+
+<img src="screens/ReadMe 1.jpg" alt="Screenshot" style="width: 800px;"/>
 
 A plugin for Lightroom Classic<sup>1</sup> on Windows and macOS: 
 - Show which focus point was active when the picture was taken <sup>2</sup>
@@ -16,22 +18,16 @@ A plugin for Lightroom Classic<sup>1</sup> on Windows and macOS:
 <sup>6</sup> Currently supported for Canon, Nikon, Fuji, Olympus/OM, Panasonic, Pentax, Ricoh.<br>
 <sup>7</sup> Not for LR5.<br>
 
-To understand the principles of this plugin, how to use it and how to interpret the results, please refer to the **[User Manual](docs/Focus%20Points.md)**. **It is recommended that you read chapters 1, 2 and the part of chapter 3 that applies to your camera**.
+## Current Release:
 
 **[Download the latest release](https://github.com/musselwhizzle/Focus-Points/releases/latest)**  or see detailed **[installation instructions](#installation)**.
 
 If you have any questions, comments or suggestions for improving this plugin, please share your feedback in **[Focus-Points Discusssions](https://github.com/musselwhizzle/Focus-Points/discussions)**.
 
-<br>
-
-<img src="screens/ReadMe 1.jpg" alt="Screenshot" style="width: 800px;"/>
+To understand the principles of this plugin, how to use it and how to interpret the results, please refer to the **[User Manual](docs/Focus%20Points.md)**. **It is recommended that you read chapters 1, 2 and the part of chapter 3 that applies to your camera**.
 
 
-<br>
-
-## Current Release:
-
-## V3.3 updated April 9, 2026
+### [V3.3 updated April 9, 2026](https://github.com/musselwhizzle/Focus-Points/releases/latest)
 
 ### New features and changes:
 
