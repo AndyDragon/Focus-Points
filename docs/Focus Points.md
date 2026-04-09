@@ -1146,8 +1146,9 @@ However, at the system level, there are ways to automate the startup of the plug
 On Windows, you can use the free [AutoHotkey](https://www.autohotkey.com/) utility together with a small script to assign the command _File → Plug-in Extras → Show Focus Point_ to a key. The same applies to _Show Metadata_.
 
 The plugin comes with a ready-to-run, compiled Autohotkey script that assigns:<br>
-\- `NumPad *` as a shortcut for `Show Focus Point`<br>
-\- `NumPad /` as a shortcut for `Show Metadata`
+\-  `NumPad *` as a shortcut for `Show Focus Point`<br>
+\-  `NumPad /` as a shortcut for `Show Metadata`<br>
+\-`^NumPad -` as a shortcut for `Straighten Images`
 
 The **FocusPointsHotkey.exe** file (for the English UI) can be found in the `ahk` folder of the focuspoints.lrplugin file. If you use the German language UI in Lightroom, use FocusPointsHotkey_de.exe instead.
 
