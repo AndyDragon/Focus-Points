@@ -227,7 +227,7 @@ A link to the User Guide (this document) provides quick and easy access to the o
 The window can be closed by clicking `Exit` or pressing \<Enter> or \<Esc> or \<Space>.
 <br>
 
-#### Depth of Field, Hyperfocal Distance
+#### Focus Distance, Depth of Field, Hyperfocal Distance
 
 Most camera makers include subject or focus distance information in makernotes. Sony, Fuji and Pentax do not, so this section is not relevant to images taken with their cameras.
 
@@ -428,13 +428,25 @@ Straightening individual images manually is not difficult, and Lightroom also su
 
 As this function relies on the presence of the `RollAngle` tag in metadata, its application is currently limited to
 
-- Canon (R1, R3 (FW2.0), R5 (FW 1.5), R5m2, R6m2, R7)
+- Canon (R5 (FW 1.5), R5m2, R6m2, R7)
 - Nikon (D5, D500 and later models)
 - Fuji (XT-5 and later models)
 - Olympus/OM (EM-1/5/10 III and later models)
 - Panasonic (Lumix G6 and later models)
+- Pentax (K-7 and later models)<sup>1</sup>
+- Ricoh (GR III and later models)<sup>1</sup>
 
-Example:
+<sup>1</sup> Pentax and Ricoh also record roll angle information for the specified models. However, when used to straighten photos, the results are typically not as precise as those provided by other brands:
+
+- The value's numeric precision is 0.5°, so you will see roll angle values of 0, 0.5, 1.0, 1.5, and so on.
+- The recorded roll angle value does not always seem to correspond reasonably to the actual tilt angle. Consequently, images aligned based on the RollAngle tag do not always appear straight.
+- With older Pentax models in particular, a Roll Angle of -45/+45° is sometimes recorded, despite this value bearing no relation to the captured image.
+
+Nevertheless, the plugin will support the straightening of photos taken with Pentax and Ricoh cameras.
+Whether this feature is useful for straightening images is up to the individual user to decide.
+
+
+### Example
 The photo has a roll angle of 2.5°. Applying a crop angle of -2.5° compensates for the tilt. Please note that a non-zero crop angle will change the crop of the photo. Straightening the photo will result in the corners being lost. The result obtained by using the 'Straighten Images' tool is the same as if you enter the roll angle compensation manually in Lightroom's 'Crop & Straighten' tool. This also means, that you can modify or even revert the result by
 
 <img src="../screens/Straighten%201.jpg" alt="User Interface" style="width: 1000px;"/>
