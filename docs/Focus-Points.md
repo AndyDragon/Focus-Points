@@ -450,7 +450,7 @@ Whether this feature is useful for straightening images is up to the individual 
 ### Example
 The photo has a roll angle of 2.5°. Applying a crop angle of -2.5° compensates for the tilt. Please note that a non-zero crop angle will change the crop of the photo. Straightening the photo will result in the corners being lost. The result obtained by using the 'Straighten Images' tool is the same as if you enter the roll angle compensation manually in Lightroom's 'Crop & Straighten' tool. This also means, that you can modify or even revert the result by
 
-<img src="../screens/Straighten%201.jpg" alt="User Interface" style="width: 1000px;"/>
+<img src="images/Straighten%201.jpg" alt="User Interface" style="width: 1000px;"/>
 
 
 ### Operation
@@ -459,26 +459,26 @@ To use the Straighten Images plugin, select the photos you want to straighten an
 
 The plugin then processes all the selected photos, retrieving 'RollAngle' information from their metadata if available, and applies the relevant correction by adjusting the crop angle of each photo. The standard progress bar in the top-left corner of Lightroom shows the progress of the operation. You can interrupt the process by clicking the 'x' icon to the right of the progress bar.
 
-<img src="../screens/Straighten%202.jpg" alt="User Interface" style="width: 1000px;"/>
+<img src="images/Straighten%202.jpg" alt="User Interface" style="width: 1000px;"/>
 
 By default, the plugin notifies you of successful completion of the process with a 'bezel' — a brief pop-up window — upon completion.
 
-<img src="../screens/Straighten%203.jpg" alt="User Interface" style="width: 1000px;"/>
+<img src="images/Straighten%203.jpg" alt="User Interface" style="width: 1000px;"/>
 
 If any of the selected photos cannot be straightened, a dialog box will provide a summary. You can configure the conditions that trigger this window.
 
-<img src="../screens/Straighten%204.jpg" alt="User Interface" style="width: 1000px;"/>
+<img src="images/Straighten%204.jpg" alt="User Interface" style="width: 1000px;"/>
 
 If you require more detailed information, you can access it by clicking 'See details', which opens the log file.
 
-<img src="../screens/Straighten%205.jpg" alt="User Interface" style="width: 1000px;"/>
+<img src="images/Straighten%205.jpg" alt="User Interface" style="width: 1000px;"/>
 
 
 ### Customization
 
 Various options allow you to customize and fine-tune the process of straightening images:
 
-<img src="../screens/Straighten%206.jpg" alt="User Interface"/>
+<img src="images/Straighten%206.jpg" alt="User Interface"/>
 
 For a detailed explanation of these settings, see [Straightening Options](#straightening-options)
 
@@ -502,10 +502,10 @@ Conversely, the Straighten Images feature is extremely useful for genres such as
 The plugin generally produces better and more reliable level correction results than Lightroom's Auto Transform feature. This is because it responds directly to horizontal camera imbalance. Auto Transform looks for straight lines in a photo and uses them as a reference point to straighten the image. However, if there are structures in an image that are not actually straight, the result will be incorrect.
 
 Lightroom Auto Transform ('Level'):
-<img src="../screens/Straighten%207.jpg" alt="User Interface" style="width: 1000px;"/>
+<img src="images/Straighten%207.jpg" alt="User Interface" style="width: 1000px;"/>
 
 This plugin's Straighten Image function:
-<img src="../screens/Straighten%208.jpg" alt="User Interface" style="width: 1000px;"/>
+<img src="images/Straighten%208.jpg" alt="User Interface" style="width: 1000px;"/>
 
 ## 2.5 Configuration and Settings
 
@@ -602,7 +602,7 @@ The logging mechanism provides a fine-grained hierarchy of levels at which infor
 
 These settings control the process of [straightening images](#24-Straighten-images):
 
-<img src="../screens/Settings%20-%20Straightening%20Options.jpg" alt="User Interface"/>
+<img src="images/Settings%20-%20Straightening%20Options.jpg" alt="User Interface"/>
 
 **_Overwrite existing crop angle setting_**. Default setting: `Off`<br>
 Roll angle compensation will be applied regardless of whether the photo has already been rotated. The straightening angle will replace the existing crop angle, rather than being added to it.
