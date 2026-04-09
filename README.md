@@ -55,8 +55,8 @@ To understand the principles of this plugin, how to use it and how to interpret 
 * **Other**
   * ExifTool 13.55 (April 7, 2026)
   * ImageMagick 7.1.2-17 
-  * New plugin landing page and documentation without confusing Github details [#363](https://github.com/musselwhizzle/Focus-Points/issues/363)
-  https://musselwhizzle.github.io/Focus-Points/
+  * New plugin landing page and documentation without confusing Github details [#363](https://github.com/musselwhizzle/Focus-Points/issues/363)<br>
+  [https://musselwhizzle.github.io/Focus-Points/](https://musselwhizzle.github.io/Focus-Points/)
 
 
 
