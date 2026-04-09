@@ -11,7 +11,7 @@ A plugin for Lightroom Classic<sup>1</sup> on Windows and macOS:
 - Straightening images by applying compensation for camera roll angle<sup>6</sup>
 
 <sup>1</sup> LR5.7 and LR6 perpetual licenses and LrC subscriptions.<br>
-<sup>2</sup> For Canon, Nikon, Sony, Fuji, Olympus/OM, Panasonic, Pentax, Ricoh, Apple. See full [list of supported cameras](../README.md#supported-cameras).<br>
+<sup>2</sup> For Canon, Nikon, Sony, Fuji, Olympus/OM, Panasonic, Pentax, Ricoh, Apple. See full [list of supported cameras](#supported-cameras).<br>
 <sup>3</sup> Depending on the presence of metadata.<br> 
 <sup>4</sup> Currently supported for Pentax and OM System.<br> 
 <sup>5</sup> Currently supported for Fuji, OM System (subjects, faces) and Sony, Olympus, Pentax (faces).<br> 
@@ -50,7 +50,7 @@ To understand the principles of this plugin, how to use it and how to interpret 
     
 * **Camera Support:**
   * Ricoh GR IV Monochrome
-  * in addition to the cameras supported by V3.2. [See here for full list](https://github.com/musselwhizzle/Focus-Points/blob/master/README.md#supported-cameras).
+  * in addition to the cameras supported by V3.2. [See here for full list](#supported-cameras).
   
 * **Other**
   * ExifTool 13.55 (April 7, 2026)
@@ -214,7 +214,7 @@ rderimay, philmoz, project802, jandhollander, DeziderMesko, StefLedof, roguephys
 <a href="https://github.com/musselwhizzle/Focus-Points/graphs/contributors">Full list can be seen here.</a>
 
 Special thanks go to [John R. Ellis](https://johnrellis.com/) for providing the code that mimics a rectangular crop while rotating a photo and preserving its aspect ratio. This is something that Lightroom's Crop & Straighten Tool can do, but the SDK cannot.
-John is a renowned SDK expert and the creator of [numerous amazing Lightroom plugins](https://johnrellis.com/lightroom/allplugins.htm), including the Debugging Toolkit,without which this plugin wouldn't exist.
+John is a renowned SDK expert and the creator of [numerous amazing Lightroom plugins](https://johnrellis.com/lightroom/allplugins.htm), including the Debugging Toolkit, without which this plugin wouldn't exist.
 
 
 ## Licenses
