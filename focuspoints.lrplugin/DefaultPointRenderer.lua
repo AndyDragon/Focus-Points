@@ -95,6 +95,7 @@ function DefaultPointRenderer.createPhotoView(photo, photoDisplayWidth, photoDis
     else      -- no overlays, just display the image
       photoView = imageView
     end
+
   end
 
   photoView.mouse_down = function()
@@ -410,6 +411,7 @@ function prepareRendering(photo, photoDisplayWidth, photoDisplayHeight, metadata
           trX>photoDisplayWidth or brX >photoDisplayWidth or
           blY>photoDisplayHeight or brY>photoDisplayHeight
       end
+
       -- To prevent UI freeze and keep plugin responsive
       LrTasks.yield()
     end
@@ -431,9 +433,10 @@ end
 ------------------------------------------------------------------------------]]
 function createOverlayViews(fpTable, photoDisplayWidth, photoDisplayHeight)
 
-  local viewsTable = {
-    place = "overlapping"
-  }
+local viewsTable = {
+  place = "overlapping"
+
+}
 
   if fpTable then
 

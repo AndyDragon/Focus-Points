@@ -66,11 +66,11 @@ FocusPointPrefs.kbdInputSmall      = 1
 FocusPointPrefs.kbdInputRegular    = 2
 
 -- URL to handle Update mechanism
-FocusPointPrefs.latestReleaseURL   = "https://github.com/musselwhizzle/Focus-Points/tree/v3.2_pre?tab=readme-ov-file#focus-points--v32-prelease"
-FocusPointPrefs.latestReleaseURL   = "https://github.com/musselwhizzle/Focus-Points/releases/latest"
+FocusPointPrefs.urlLatestRelease   = "https://github.com/musselwhizzle/Focus-Points/releases/latest/"
+FocusPointPrefs.urlReleases        = "https://github.com/musselwhizzle/Focus-Points/releases/"
 
 FocusPointPrefs.masterVersionFile  = "https://raw.githubusercontent.com/musselwhizzle/Focus-Points/master/focuspoints.lrplugin/Version.txt"
-FocusPointPrefs.latestVersionFile  = "https://raw.githubusercontent.com/musselwhizzle/Focus-Points/v3.2_pre/focuspoints.lrplugin/Version.txt"
+FocusPointPrefs.latestVersionFile  = "https://raw.githubusercontent.com/musselwhizzle/Focus-Points/develop/focuspoints.lrplugin/Version.txt"
 FocusPointPrefs.latestVersionFile  = "https://raw.githubusercontent.com/musselwhizzle/Focus-Points/master/focuspoints.lrplugin/Version.txt"
 
 -- URL definitions for accessing documents from the UI
@@ -114,17 +114,24 @@ local bind = LrView.bind
 ------------------------------------------------------------------------------]]
 function FocusPointPrefs.InitializePrefs(prefs)
   -- Set any undefined properties to their default values
-  if not prefs.screenScaling           then	prefs.screenScaling       = 0 end
-  if not prefs.pluginWindowScaling     then prefs.pluginWindowScaling = FocusPointPrefs.pluginWindowL end
-  if     prefs.truncateLongText == nil then prefs.truncateLongText    = true     end
-  if not prefs.truncateLimit           then prefs.truncateLimit       = 32       end
-  if not prefs.focusBoxSize            then	prefs.focusBoxSize        = FocusPointPrefs.focusBoxSize[FocusPointPrefs.initfocusBoxSize] end
-  if not prefs.focusBoxColor           then	prefs.focusBoxColor       = "red"    end
-  if     prefs.taggingControls  == nil then prefs.taggingControls     = true     end
-  if     prefs.keyboardLayout   == nil then prefs.keyboardLayout      = KeyboardLayout.autoDetectLayout end
-  if not prefs.loggingLevel            then	prefs.loggingLevel        = "AUTO"   end
-  if     prefs.checkForUpdates  == nil then	prefs.checkForUpdates     = true     end   -- here we need a nil pointer check!!
-  if     prefs.keyboardInput    == nil then prefs.keyboardInput       = FocusPointPrefs.kbdInputRegular end
+  if not prefs.screenScaling               then prefs.screenScaling              = 0 end
+  if not prefs.pluginWindowScaling         then prefs.pluginWindowScaling        = FocusPointPrefs.pluginWindowL end
+  if     prefs.truncateLongText    == nil  then prefs.truncateLongText           = true      end
+  if not prefs.truncateLimit               then prefs.truncateLimit              = 32        end
+  if not prefs.focusBoxSize                then prefs.focusBoxSize               = FocusPointPrefs.focusBoxSize[FocusPointPrefs.initfocusBoxSize] end
+  if not prefs.focusBoxColor               then prefs.focusBoxColor              = "red"     end
+  if     prefs.taggingControls     == nil  then prefs.taggingControls            = true      end
+  if     prefs.keyboardLayout      == nil  then prefs.keyboardLayout             = KeyboardLayout.autoDetectLayout end
+  if not prefs.loggingLevel                then prefs.loggingLevel               = "AUTO"    end
+  if     prefs.overwriteCropAngle  == nil  then prefs.overwriteCropAngle         = false     end
+  if     prefs.straightenLimits    == nil  then prefs.straightenLimits           = false     end
+  if not prefs.straightenLimitLow          then prefs.straightenLimitLow         = -0        end
+  if not prefs.straightenLimitHigh         then prefs.straightenLimitHigh        =  45       end
+  if not prefs.straightenSummaryCondition  then prefs.straightenSummaryCondition = "SKIPPED" end
+  if     prefs.straightenApplyBias == nil  then prefs.straightenApplyBias        = false     end
+  if not prefs.straightenBias              then prefs.straightenBias             = 0.0       end
+  if     prefs.checkForUpdates     == nil  then prefs.checkForUpdates            = true      end   -- here we need a nil pointer check!!
+  if     prefs.keyboardInput       == nil  then prefs.keyboardInput              = FocusPointPrefs.kbdInputRegular end
   -- get the latest plugin version for update checks
   FocusPointPrefs.retrieveVersionOfLatestRelease()
 end
@@ -354,6 +361,24 @@ function FocusPointPrefs.isUpdateAvailable()
 end
 
 --[[----------------------------------------------------------------------------
+  public boolean
+  getReleaseURL()
+
+  For a pre-release,    returns ./releases
+  For a public release, returns ./releases/latest
+------------------------------------------------------------------------------]]
+function FocusPointPrefs.getReleaseURL()
+  local pluginVersion = Info.VERSION
+  if tonumber(pluginVersion.build) >= 9000 then
+    -- pre-release
+    return FocusPointPrefs.urlReleases
+  else
+    -- public release
+    return FocusPointPrefs.urlLatestRelease
+  end
+end
+
+--[[----------------------------------------------------------------------------
   public table
   genSectionsForBottomOfDialog( table viewFactory, propertyTable )
 
@@ -376,7 +401,7 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
         f:spacer{fill_horizontal = 1},
         f:push_button {
           title = "Open URL",
-          action = function() LrHttp.openUrlInBrowser( FocusPointPrefs.latestReleaseURL ) end,
+          action = function() LrHttp.openUrlInBrowser( FocusPointPrefs.getReleaseURL() ) end,
         },
       }
   else
@@ -601,6 +626,111 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
       },
     }
   end
+  local function sectionStraighteningOptions()
+    return
+    {
+      title = "Straightening Options",
+      bind_to_object = prefs,
+      spacing = f:control_spacing(),
+      f:row {
+        bind_to_object = prefs,
+        spacing = f:control_spacing(),
+        f:popup_menu {
+          title = "overwriteCropAngle",
+          value = bind("overwriteCropAngle"),
+          width = dropDownWidth,
+          items = {
+            { title = "On", value = true },
+            { title = "Off", value = false },
+          }
+        },
+        f:static_text {
+          title = 'Overwrite existing crop angle setting',
+        },
+      },
+      f:row {
+        bind_to_object = prefs,
+        spacing = f:control_spacing(),
+        f:popup_menu {
+          title = "straightenLimits",
+          value = bind("straightenLimits"),
+          width = dropDownWidth,
+          items = {
+            { title = "On", value = true },
+            { title = "Off", value = false },
+          },
+        },
+        f:static_text {
+          title = 'Apply straightening only for angles between'
+        },
+        f:edit_field {
+          value = bind("straightenLimitLow"),
+          width_in_chars = 3,
+          min = 0,
+          max = 45,
+          precision = 1,
+        },
+        f:static_text {
+          title = 'and',
+        },
+        f:edit_field {
+          value = bind("straightenLimitHigh"),
+          width_in_chars = 3,
+          min = 0,
+          max = 45,
+          precision = 1,
+        },
+        f:static_text {
+          title = 'degrees (in any direction)',
+        },
+      },
+      f:row {
+        bind_to_object = prefs,
+        spacing = f:control_spacing(),
+        f:popup_menu {
+          title = "straightenApplyBias",
+          value = bind("straightenApplyBias"),
+          width = dropDownWidth,
+          items = {
+            { title = "On", value = true },
+            { title = "Off", value = false },
+          },
+        },
+        f:static_text {
+          title = 'Apply calibration offset of'
+        },
+        f:edit_field {
+          value = bind("straightenBias"),
+          width_in_chars = 4,
+          min = -5,
+          max = 5,
+          precision = 2,
+        },
+        f:static_text {
+          title = 'degrees to roll angle',
+        },
+      },
+      f:row {
+        bind_to_object = prefs,
+        spacing = f:control_spacing(),
+        f:popup_menu {
+          title = "Straighten Summary Condition",
+          value = bind('straightenSummaryCondition'),
+          width = dropDownWidth,
+          items = {
+            { title = "Always", value = "ALWAYS" },
+            { title = "Skipped Images", value = "SKIPPED" },
+            { title = "Warnings", value = "WARNINGS" },
+            { title = "Errors", value = "ERRORS" },
+            { title = "Never", value = "NEVER" },
+          }
+        },
+        f:static_text {
+          title = 'Condition to open the summary dialog when straightening is complete'
+        },
+      },
+    }
+  end
   local function sectionUpdates()
     return
     {
@@ -636,7 +766,14 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
         },
         f:column {
           f:static_text {
-            title = "https://imagemagick.org/index.php"
+            title = "https://imagemagick.org/index.php",
+            text_color = LrColor(0, 0.25, 1),
+            immediate = true,
+            mouse_down = function(_view)
+              LrTasks.startAsyncTask(function()
+                LrHttp.openUrlInBrowser("https://imagemagick.org/index.php")
+              end)
+            end,
           },
         },
       },
@@ -656,7 +793,41 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
         },
         f:column {
           f:static_text {
-            title = "https://exiftool.org/"
+            title = "https://exiftool.org/",
+            text_color = LrColor(0, 0.25, 1),
+            immediate = true,
+            mouse_down = function(_view)
+              LrTasks.startAsyncTask(function()
+                LrHttp.openUrlInBrowser("https://exiftool.org/")
+              end)
+            end,
+          },
+        },
+      },
+      f:spacer{fill_horizontal = 1},
+      f:row {
+        fill_horizontal = 1,
+        f:column {
+          fill_horizontal = 1,
+          f:static_text {
+            font = "<system/bold>",
+            title = 'John R. Ellis'
+          },
+          f:spacer{ height = 5 },
+          f:static_text {
+            title = "Permission to use code to crop an image while maintaining its aspect ratio"
+          }
+        },
+        f:column {
+          f:static_text {
+            title = "https://johnrellis.com/lightroom/allplugins.htm",
+            text_color = LrColor(0, 0.25, 1),
+            immediate = true,
+            mouse_down = function(_view)
+              LrTasks.startAsyncTask(function()
+                LrHttp.openUrlInBrowser("https://johnrellis.com/lightroom/allplugins.htm")
+              end)
+            end,
           },
         },
       },
@@ -668,6 +839,7 @@ function FocusPointPrefs.genSectionsForBottomOfDialog( f, _p )
     sectionUserInterface(),
     sectionViewingOptions(),
     sectionLogging(),
+    sectionStraighteningOptions(),
     sectionUpdates(),
     sectionAcknowledgements(),
   }

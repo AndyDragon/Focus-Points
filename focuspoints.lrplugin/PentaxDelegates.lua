@@ -68,7 +68,7 @@ local supportedModels = {
     "k-70", "k-1", "kp", "k-1 mark ii",                                         -- Pentax version 12
     "gr iii",                                                                   -- Pentax version 13
     "k-3 mark iii", "gr iii hdf", "gr iiix",                                    -- Pentax version 14
-    "k-3 mark iii monochrome", "gr iiix hdf", "gr iv"                           -- Pentax version 15
+    "k-3 mark iii monochrome", "gr iiix hdf", "gr iv", "gr iv monochrome",      -- Pentax version 15
 }
 
 -- Tag indicating that makernotes / AF section exists
@@ -93,7 +93,7 @@ local metaKeyCAfPointsInFocus     = "CAF Points In Focus"
 local metaKeyFaceDetectFrameSize  = "Face Detect Frame Size"
 local metaKeyFacesDetected        = "Faces Detected"
 local metaKeyFaceInfoK3III        = "Face Info K3 III"
-local metaKeyAfInfo               = "AF Info"
+local metaKeyAfInfoK3III          = "AF Info K3 III"
 local metaKeySubjectRecognition   = "Subject Recognition"
 local metaKeyAFHold               = "AFC Hold"
 local metaKeyFocusSensitivity     = "AFC Sensitivity"
@@ -130,6 +130,7 @@ local function modelHasK3iiiAfInfo(model)
       or (model == "ricoh gr iiix")
       or (model == "ricoh gr iiix hdf")
       or (model == "ricoh gr iv")
+      or (model == "ricoh gr iv monochrome")
 end
 
 --[[----------------------------------------------------------------------------
@@ -196,10 +197,10 @@ function getK3iiiAfPoints(photo, metadata)
   local imageSize = {orgPhotoWidth, orgPhotoHeight}
 
   -- Fetch afInfo from metadata and store as table
-  local afInfo = ExifUtils.findValue(metadata, metaKeyAfInfo)
+  local afInfo = ExifUtils.findValue(metadata, metaKeyAfInfoK3III)
   if afInfo then
     Log.logInfo("Pentax",string.format(
-      "Tag '%s' found: %s", metaKeyAfInfo, afInfo))
+      "Tag '%s' found: %s", metaKeyAfInfoK3III, afInfo))
     afInfo = Utils.splitTrim(afInfo, " ")
   else
     Log.logError("Pentax","No AF information found")
@@ -337,7 +338,7 @@ function getK3iiiAfPoints(photo, metadata)
 
   if not FocusInfo.focusPointsDetected then
     Log.logWarn("Pentax",string.format(
-      "Tag '%s' does not contain any in-focus points/areas", metaKeyAfInfo))
+      "Tag '%s' does not contain any in-focus points/areas", metaKeyAfInfoK3III))
   end
 
   return result
@@ -734,9 +735,10 @@ local function getDriveMode(driveModeValue)
   else
     result = v0
   end
-  if v1 ~= "No Timer"        then result = result .. "; " .. v1 end
-  if v2 ~= "Shutter Button"  then result = result .. "; " .. v2 end
-  if v3 ~= "Single Exposure" then result = result .. "; " .. v3 end
+  -- Skip the default settings that create 'visual noise' rather than added value
+  if v1 and v1 ~= "No Timer"        then result = result .. "; " .. v1 end
+  if v2 and v2 ~= "Shutter Button"  then result = result .. "; " .. v2 end
+  if v3 and v3 ~= "Single Exposure" then result = result .. "; " .. v3 end
 
   return Utils.wrapText(result, {";"}, FocusInfo.maxValueLen)
 end

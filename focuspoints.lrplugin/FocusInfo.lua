@@ -87,7 +87,7 @@ local status = {
     {  message = "No focus points recorded",
        color   = LrColor("orange"),
        tooltip = "Camera has not recorded information on points in focus." ,
-       link    = "#fo-focus-points-recorded" },
+       link    = "#no-focus-points-recorded" },
     {  message = "Focus point recorded in manual focus mode",
        color   = LrColor("orange"),
        tooltip = "The photo was taken in manual focus mode and focus point information was recorded in the metadata. " ..
@@ -369,7 +369,7 @@ local function pluginStatus()
           immediate = true,
           mouse_down = function(_view)
             LrTasks.startAsyncTask(function()
-              LrHttp.openUrlInBrowser( FocusPointPrefs.latestReleaseURL )
+              LrHttp.openUrlInBrowser( FocusPointPrefs.getReleaseURL() )
             end)
           end,
         },
@@ -377,7 +377,7 @@ local function pluginStatus()
         f:push_button {
           title = "Open URL",
           font = "<system>",
-          action = function() LrHttp.openUrlInBrowser( FocusPointPrefs.latestReleaseURL ) end,
+          action = function() LrHttp.openUrlInBrowser( FocusPointPrefs.getReleaseURL() ) end,
         },
       }
     else

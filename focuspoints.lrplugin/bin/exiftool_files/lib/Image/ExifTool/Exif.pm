@@ -213,7 +213,7 @@ $formatName[129] = 'utf8';  # (Exif 3.0)
     10 => 'JBIG Color', #3
     99 => 'JPEG', #16
     262 => 'Kodak 262', #16
-    32766 => 'Next or Sony ARW Compressed 2', #3/Milos
+    32766 => 'NeXt or Sony ARW Compressed 2', #3/Milos
     32767 => 'Sony ARW Compressed', #16
     32769 => 'Packed RAW', #PH (used by Epson, Nikon, Samsung)
     32770 => 'Samsung SRW Compressed', #PH
@@ -1431,6 +1431,7 @@ my %opcodeInfo = (
         WriteGroup => 'IFD0',
         Mandatory => 1,
         PrintConv => {
+          # 0 - written by Adobe DNG converter 18.1 when converting from CR3
             1 => 'Centered',
             2 => 'Co-sited',
         },
@@ -2117,8 +2118,16 @@ my %opcodeInfo = (
     0x8827 => {
         Name => 'ISO',
         Notes => q{
-            called ISOSpeedRatings by EXIF 2.2, then PhotographicSensitivity by the EXIF
-            2.3 spec.
+            called ISOSpeedRatings by EXIF 2.2, then PhotographicSensitivity by EXIF
+            2.3.  This tag has a maximum value of 65535 because the brain-dead EXIF
+            specification limits it to a short integer, and while they can change the
+            name of the tag in an updated EXIF specification, they can't allow a larger
+            storage format for some reason.  For higher ISO settings, see the other
+            ISO-related tags StandardOutputSensitivity, RecommendedExposureIndex,
+            ISOSpeed, ISOSpeedLatitudeyyy and ISOSpeedLatitudezzz.  But the meanings of
+            these new tags are anyone's guess since the defining specification, ISO
+            12232, is imprisoned by the ISO organization who extort a ransom for the
+            release of this information
         },
         Writable => 'int16u',
         Count => -1,
@@ -4698,7 +4707,7 @@ my %subSecConv = (
         PrintConv => 'sprintf("%.1f",$val)',
     },
     FocalLength35efl => { #26/PH
-        Description => 'Focal Length',
+        Description => 'Focal Length 35mm Equiv',
         Notes => 'this value may be incorrect if the image has been resized',
         Groups => { 2 => 'Camera' },
         Require => {
@@ -6169,9 +6178,7 @@ sub NextOffsetName($;$)
 
 #------------------------------------------------------------------------------
 # Process EXIF directory
-# Inputs: 0) ExifTool object reference
-#         1) Reference to directory information hash
-#         2) Pointer to tag table for this directory
+# Inputs: 0) ExifTool ref, 1) dirInfo ref, 2) tag table ref
 # Returns: 1 on success, otherwise returns 0 and sets a Warning
 sub ProcessExif($$$)
 {
@@ -7156,7 +7163,7 @@ EXIF and TIFF meta information.
 
 =head1 AUTHOR
 
-Copyright 2003-2025, Phil Harvey (philharvey66 at gmail.com)
+Copyright 2003-2026, Phil Harvey (philharvey66 at gmail.com)
 
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

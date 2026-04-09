@@ -62,6 +62,7 @@ local Utils                 = require 'Utils'
 ------------------------------------------------------------------------------]]
 local function showFocusPoint()
 
+
   LrFunctionContext.callWithContext("showFocusPointDialog", function(context)
 
     local catalog = LrApplication.activeCatalog()
@@ -74,6 +75,7 @@ local function showFocusPoint()
     local switchedToLibrary
     local userResponse
     local exitPlugin
+    local clicked
     local prefs = LrPrefs.prefsForPlugin( nil )
     local props = LrBinding.makePropertyTable(context)
     local LR5 = (LrApplication.versionTable().major == 5) -- or true -- to simulate running on LR5
@@ -263,6 +265,7 @@ local function showFocusPoint()
     local function kbdShortcutInputField()
       local f = LrView.osFactory()
       local previewText  = ""
+      local prevTextLen  = 0
       props.shortcutText = ""
       return f:edit_field {
         value = LrView.bind('shortcutText', props),
@@ -270,7 +273,7 @@ local function showFocusPoint()
         height = inputFieldHeight(),
         border_enabled = false, -- optionally suppress borders
         immediate = true,
-        validate = function(view, text)
+            validate = function(view, text)
           --[[
             Use the validate() function to interpret user keystrokes as shortcuts
             BUT, attention: for each keystoke, validate() is called twice!!
@@ -296,7 +299,12 @@ local function showFocusPoint()
           -- Get the most recently entered character
           local char = Utf8.last_char(text)
           Log.logDebug("FocusPoint", string.format("Shortcut input: c = '%s'", char))
-          if not char or char == "" then return false end
+          Log.logDebug("FocusPoint", string.format("Text length: text = '%s', previous = '%s'", string.len(text), prevTextLen))
+          if not char or char == "" or string.len(text) < prevTextLen then
+            prevTextLen = string.len(text)
+            return true
+          end
+          prevTextLen = string.len(text)
           --------------------------------------------------------------------------------------
           -- Parse character and perform designated operation if it is a shortcut
           -- Tagging operations: flagging / rating / coloring
@@ -422,7 +430,7 @@ local function showFocusPoint()
           end
           -- always return true; in case of false the entire text is displayed in red color if visible
           return true
-        end,
+          end,
       }
     end
 
@@ -463,7 +471,6 @@ local function showFocusPoint()
       local f = LrView.osFactory()
       props.fileName = ""
       props.fileNameTooltip = ""
-      props.clicked = false
       return f:row {
         margin = 0,
         spacing = 0,     -- removes uniform spacing; we control it manually
@@ -473,8 +480,7 @@ local function showFocusPoint()
           enabled = #selectedPhotos > 1 or not LR5,
           action = function(button)
             -- Prevent multiple executions - known LrC SDK quirk!
-            if props.clicked then return end
-            props.clicked = true
+            if clicked then return else clicked = true end
             LrDialogs.stopModalWithResult(button, "previous")
           end
         },
@@ -492,8 +498,7 @@ local function showFocusPoint()
           margin = 0,
           action = function(button)
             -- Prevent multiple executions - known LrC SDK quirk!
-            if props.clicked then return end
-            props.clicked = true
+            if clicked then return else clicked = true end
             -- set index to next image, wrap around at end of list
             LrDialogs.stopModalWithResult(button, "next")
           end
@@ -773,6 +778,7 @@ local function showFocusPoint()
         Log.logInfo("FocusPoint", "Present dialog and information")
 
         local f = LrView.osFactory()
+        clicked = false
         userResponse = LrDialogs.presentModalDialog {
           title = "Focus-Points (Version " .. GlobalDefs.pluginDisplayVersion .. ")",
           contents = FocusPointDialog.createDialog(targetPhoto, photoView, infoView, kbdShortcutInput),

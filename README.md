@@ -6,56 +6,57 @@ A plugin for Lightroom Classic<sup>1</sup> on Windows and macOS:
 - Show which focus point was active when the picture was taken <sup>2</sup>
 - Display user-selected autofocus points/area <sup>3,4</sup>
 - Visualize faces and subjects detected by the camera <sup>3,5</sup>
-- Tagging (flagging, rating and coloring) of photos within the plugin UI <sup>6</sup>
+- Tagging (flagging, rating and coloring) of photos within the plugin UI <sup>7</sup>
 - Display and search (EXIF) metadata of the selected image 
+- Straightening images by applying compensation for camera roll angle<sup>6</sup>
 
 <sup>1</sup> LR5.7 and LR6 perpetual licenses and LrC subscriptions.<br>
-<sup>2</sup> For Canon, Nikon, Sony, Fuji, Olympus/OM, Panasonic, Pentax, Ricoh, Apple. See full [list of supported cameras](#supported-cameras).<br>
+<sup>2</sup> For Canon, Nikon, Sony, Fuji, Olympus/OM, Panasonic, Pentax, Ricoh, Apple. See full [list of supported cameras](../README.md#supported-cameras).<br>
 <sup>3</sup> Depending on the presence of metadata.<br> 
 <sup>4</sup> Currently supported for Pentax and OM System.<br> 
 <sup>5</sup> Currently supported for Fuji, OM System (subjects, faces) and Sony, Olympus, Pentax (faces).<br> 
-<sup>6</sup> Not for LR5.<br>
+<sup>6</sup> Currently supported for Canon, Nikon, Fuji, Olympus/OM, Panasonic, Pentax, Ricoh.<br>
+<sup>7</sup> Not for LR5.<br>
 
+## Current Release: [V3.3 updated April 9, 2026](https://github.com/musselwhizzle/Focus-Points/releases/latest)
 
-## Current Release:
-
-**[Download the latest release](https://github.com/musselwhizzle/Focus-Points/releases/latest)**  and see detailed **[installation instructions](#installation)**.
+**[Download the latest release](https://github.com/musselwhizzle/Focus-Points/releases/latest)**  or see detailed **[installation instructions](#installation)**.
 
 If you have any questions, comments or suggestions for improving this plugin, please share your feedback in **[Focus-Points Discusssions](https://github.com/musselwhizzle/Focus-Points/discussions)**.
 
-To understand the principles of this plugin, how to use it and how to interpret the results, please refer to the **[User Manual](docs/Focus-Points.md)**. **It is recommended that you read chapters 1, 2 and the part of chapter 3 that applies to your camera**.
+To understand the principles of this plugin, how to use it and how to interpret the results, please refer to the **[User Manual](docs/Focus%20Points.md)**. **It is recommended that you read chapters 1, 2 and the part of chapter 3 that applies to your camera**.
 
-### [V3.2 updated January 15, 2026](https://github.com/musselwhizzle/Focus-Points/releases/latest)
 
 ### New features and changes:
 
-* **User interface**
-  * Tagging (Flagging, Rating and Coloring) of photos within the plugin UI [#302](https://github.com/musselwhizzle/Focus-Points/issues/302) (not for LR5)
-  * Filmstrip Navigation [#314](https://github.com/musselwhizzle/Focus-Points/issues/314) (not for LR5)
-  * Customizable plugin window size [#317](https://github.com/musselwhizzle/Focus-Points/issues/317)
-  * Introduction of visible input field for keyboard shortcuts [#321](https://github.com/musselwhizzle/Focus-Points/issues/321)
-  * Long metadata names excessively widen the information area [#326](https://github.com/musselwhizzle/Focus-Points/issues/326)
-  * Unify language used in the Shooting Information section [#342](https://github.com/musselwhizzle/Focus-Points/issues/342)
-  * Improved sizing of metadata window [#333](https://github.com/musselwhizzle/Focus-Points/issues/333)
-
-* **Bugfixes**
-  * V3.1 doesn't display focus points for manually focused captures on Fuji cameras while V3.0 did [#292](https://github.com/musselwhizzle/Focus-Points/issues/292)
-  * Missing data for Sony DNG files  [#305](https://github.com/musselwhizzle/Focus-Points/issues/305)
-  * No or wrong display of focus points for Fujifilm DNG files [#332](https://github.com/musselwhizzle/Focus-Points/issues/332)
-  * Metadata text files are not deleted from the disk  [#338](https://github.com/musselwhizzle/Focus-Points/issues/338)
-  * Focus points may be invisible for cropped images [#339](https://github.com/musselwhizzle/Focus-Points/issues/339)
+* **User Interface**
+  * Straighten images by making use of RollAngle metadata information [#365](https://github.com/musselwhizzle/Focus-Points/issues/365). 
+  Supported for:
+    - Canon (R5 (FW 1.5), R5m2, R6m2, R7)
+    - Nikon (D5, D500 and later models)
+    - Fuji (XT-5 and later models)
+    - Olympus/OM (EM-1/5/10 III and later models)
+    - Panasonic (Lumix G6 and later models)
+    - Pentax (K-7 and later models)
+    - Ricoh (GR III and later models)  
+    
+    Please refer to the [User Manual](docs/Focus%20Points.md#24-straighten-images) for a description of this feature.
   
-* **Camera support:**
-  * Ricoh GR III / IIIx HDF (High Diffusion Filter) models [#300](https://github.com/musselwhizzle/Focus-Points/issues/300)
-  * Sony A7R2 [#347](https://github.com/musselwhizzle/Focus-Points/issues/347)
-  * Canon R6m3, Sony A7V, Panasonic S1II (new cameras) 
-  * in addition to the cameras supported by V3.1. [See here for full list](https://github.com/musselwhizzle/Focus-Points/blob/master/README.md#supported-cameras)
+* **Bugfixes**
+  * Ricoh GR DNG images can cause plug-in to crash [#367](https://github.com/musselwhizzle/Focus-Points/issues/367)
+  * Next/Previous button issue (no function when clicked) [#368](https://github.com/musselwhizzle/Focus-Points/issues/368)
+  * FATAL error calling 'mogrify.exe' [#370](https://github.com/musselwhizzle/Focus-Points/issues/370)
+  * Straighten Images stops with "Internal Error" for non-numeric RollAngle values [#372](https://github.com/musselwhizzle/Focus-Points/issues/372)
+    
+* **Camera Support:**
+  * Ricoh GR IV Monochrome
+  * in addition to the cameras supported by V3.2. [See here for full list](https://github.com/musselwhizzle/Focus-Points/blob/master/README.md#supported-cameras)
 
 * **Other**
-  * Buy the developer a coffee [#319](https://github.com/musselwhizzle/Focus-Points/issues/319)
-  * Includes ExifTool 13.45 (Dec 26, 2025)
-
-See [README V3.2](https://github.com/musselwhizzle/Focus-Points/blob/master/docs/README_V3.2.md) for an overview of the new features.<br>
+  * ExifTool 13.55 (April 7, 2026)
+  * ImageMagick 7.1.2-17 
+  * New plugin landing page and documentation without confusing Github details [#363](https://github.com/musselwhizzle/Focus-Points/issues/363)
+  https://musselwhizzle.github.io/Focus-Points/
 
 
 
@@ -211,6 +212,10 @@ There's been a lot of man-hours put into this effort so far. All volunteer. So h
 rderimay, philmoz, project802, jandhollander, DeziderMesko, StefLedof, roguephysicist, ropma, capricorn8 (Karsten Gieselmann)
 
 <a href="https://github.com/musselwhizzle/Focus-Points/graphs/contributors">Full list can be seen here.</a>
+
+Special thanks go to [John R. Ellis](https://johnrellis.com/) for providing the code that mimics a rectangular crop while rotating a photo and preserving its aspect ratio. This is something that Lightroom's Crop & Straighten Tool can do, but the SDK cannot.
+John is a renowned SDK expert and the creator of [numerous amazing Lightroom plugins](https://johnrellis.com/lightroom/allplugins.htm), including the Debugging Toolkit,without which this plugin wouldn't exist.
+
 
 ## Licenses
 
