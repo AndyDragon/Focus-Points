@@ -88,7 +88,7 @@ sub ProcessCTMD($$$);
 sub ProcessExifInfo($$$);
 sub SwapWords($);
 
-$VERSION = '5.05';
+$VERSION = '5.06';
 
 # Note: Removed 'USM' from 'L' lenses since it is redundant - PH
 # (or is it?  Ref 32 shows 5 non-USM L-type lenses)
@@ -6166,6 +6166,11 @@ my %ciMaxFocal = (
         SeparateTable => 'UserDefStyle',
         PrintConv => \%userDefStyles,
     },
+    # location of time stamp (github400)
+    # 0x00ec - 1000D firmware 1.0.7, 40D firmware 1.0.8
+    # 0x01b4 - 5D II firmware 1.0.6 and 1.1.0
+    # 0x01b8 - 5D II firmware 2.1.2
+    # 0x01bc - 7D firmware 2.0.3
 );
 
 # Picture Style information for the 60D, etc (ref 48)
@@ -6345,6 +6350,8 @@ my %ciMaxFocal = (
         SeparateTable => 'UserDefStyle',
         PrintConv => \%userDefStyles,
     },
+    # location of time stamp (github400)
+    # 0x01d0 - 6D firmware 1.1.6, 1D X firmware 2.1.0
 );
 
 # Movie information (MakerNotes tag 0x11) (ref PH)
@@ -10260,6 +10267,19 @@ sub PrintLensID(@)
         }
         @matches = @likely unless @matches;
         @matches = @maybe unless @matches;
+        # use LensModel focal length and aperture if necessary and available
+        if (@matches > 1 and $lensModel and 
+            $lensModel =~ /(\d+(?:\.\d+)?(?:-\d+(?:\.\d+)?)?) ?mm ?f\/?(\d+(?:\.\d+)?(?:-\d+(?:\.\d+)?)?)/i)
+        {
+            my ($mm, $fstop) = ($1, $2);
+            my @best;
+            foreach $lens (@matches) {
+                next unless $lens =~ /(\d+(?:\.\d+)?(?:-\d+(?:\.\d+)?)?) ?mm ?f\/?(\d+(?:\.\d+)?(?:-\d+(?:\.\d+)?)?)/i;
+                push @best, $lens if $mm eq $1 and $fstop eq $2;
+            }
+            @matches = @best if @best;
+        }
+        
         Image::ExifTool::Exif::MatchLensModel(\@matches, $lensModel);
         return join(' or ', @matches) if @matches;
     } elsif ($lensModel and $lensModel =~ /\d/) {
