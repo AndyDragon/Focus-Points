@@ -24,7 +24,7 @@ A plugin for Lightroom Classic<sup>1</sup> on Windows and macOS:
 
 If you have any questions, comments or suggestions for improving this plugin, please share your feedback in **[Focus-Points Discusssions](https://github.com/musselwhizzle/Focus-Points/discussions)**.
 
-To understand the principles of this plugin, how to use it and how to interpret the results, please refer to the **[User Manual](docs/Focus%20Points.md)**. **It is recommended that you read chapters 1, 2 and the part of chapter 3 that applies to your camera**.
+To understand the principles of this plugin, how to use it and how to interpret the results, please refer to the **[User Manual](docs/Focus-Points.md)**. **It is recommended that you read chapters 1, 2 and the part of chapter 3 that applies to your camera**.
 
 
 ### New features and changes:
@@ -40,7 +40,7 @@ To understand the principles of this plugin, how to use it and how to interpret 
     - Pentax (K-7 and later models)
     - Ricoh (GR III and later models)  
     
-    Please refer to the [User Manual](docs/Focus%20Points.md#24-straighten-images) for a description of this feature.
+    Please refer to the [User Manual](docs/Focus-Points.md#24-straighten-images) for a description of this feature.
   
 * **Bugfixes**
   * Ricoh GR DNG images can cause plug-in to crash [#367](https://github.com/musselwhizzle/Focus-Points/issues/367)
