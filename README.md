@@ -50,8 +50,8 @@ To understand the principles of this plugin, how to use it and how to interpret 
     
 * **Camera Support:**
   * Ricoh GR IV Monochrome
-  * in addition to the cameras supported by V3.2. [See here for full list](https://github.com/musselwhizzle/Focus-Points/blob/master/README.md#supported-cameras)
-
+  * in addition to the cameras supported by V3.2. [See here for full list](https://github.com/musselwhizzle/Focus-Points/blob/master/README.md#supported-cameras).
+  
 * **Other**
   * ExifTool 13.55 (April 7, 2026)
   * ImageMagick 7.1.2-17 
