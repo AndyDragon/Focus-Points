@@ -68,7 +68,7 @@ local supportedModels = {
     "k-70", "k-1", "kp", "k-1 mark ii",                                         -- Pentax version 12
     "gr iii",                                                                   -- Pentax version 13
     "k-3 mark iii", "gr iii hdf", "gr iiix",                                    -- Pentax version 14
-    "k-3 mark iii monochrome", "gr iiix hdf", "gr iv"                           -- Pentax version 15
+    "k-3 mark iii monochrome", "gr iiix hdf", "gr iv", "gr iv monochrome",      -- Pentax version 15
 }
 
 -- Tag indicating that makernotes / AF section exists
@@ -130,6 +130,7 @@ local function modelHasK3iiiAfInfo(model)
       or (model == "ricoh gr iiix")
       or (model == "ricoh gr iiix hdf")
       or (model == "ricoh gr iv")
+      or (model == "ricoh gr iv monochrome")
 end
 
 --[[----------------------------------------------------------------------------
