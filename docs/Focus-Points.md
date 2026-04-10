@@ -54,7 +54,7 @@ A plugin for Lightroom Classic<sup>1</sup> on Windows and macOS:
 - Visualize faces and subjects detected by the camera <sup>3,5</sup>
 - Tagging (flagging, rating and coloring) of photos within the plugin UI <sup>7</sup>
 - Display and search (EXIF) metadata of the selected image 
-- Straightening images by applying compensation for camera roll angle<sup>6</sup>
+- Straightening images by applying compensation for camera roll angle<sup>3,6,7</sup>
 
 <sup>1</sup> LR5.7 and LR6 perpetual licenses and LrC subscriptions.<br>
 <sup>2</sup> For Canon, Nikon, Sony, Fuji, Olympus/OM, Panasonic, Pentax, Ricoh, Apple. See full [list of supported cameras](../README.md#supported-cameras).<br>
