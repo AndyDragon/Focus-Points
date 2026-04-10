@@ -8,7 +8,7 @@ A plugin for Lightroom Classic<sup>1</sup> on Windows and macOS:
 - Visualize faces and subjects detected by the camera <sup>3,5</sup>
 - Tagging (flagging, rating and coloring) of photos within the plugin UI <sup>7</sup>
 - Display and search (EXIF) metadata of the selected image 
-- Straightening images by applying compensation for camera roll angle<sup>6</sup>
+- Straightening images by applying compensation for camera roll angle<sup>6,7</sup>
 
 <sup>1</sup> LR5.7 and LR6 perpetual licenses and LrC subscriptions.<br>
 <sup>2</sup> For Canon, Nikon, Sony, Fuji, Olympus/OM, Panasonic, Pentax, Ricoh, Apple. See full [list of supported cameras](#supported-cameras).<br>
@@ -148,6 +148,45 @@ The Metadata Viewer is useful for viewing information that is neither visible in
 <img src="docs/images/metadata1.jpg" alt="Screenshot" style="width: 200px;"/>         <img src="docs/images/metadata2.jpg" alt="Screenshot" style="width: 200px;"/>         <img src="docs/images/metadata3.jpg" alt="Screenshot" style="width: 200px;"/>
 
 <br>
+
+## Straighten Images
+
+Straightening images is a new plugin function in V3.3:
+
+- `Library → Plug-in Extras → Straighten Images`, or
+- `File → Plug-in Extras → Straighten Images`
+
+This function reads the camera roll angle from the metadata of the selected photos, one by one, and applies compensation by rotating the photos accordingly.
+
+Straightening individual images manually is not difficult, and Lightroom also supports automatic straightening using the Transform tool. However, the Straighten Image feature can come in handy for straightening a series of photos taken in burst mode, such as wildlife, sports or action shots. This is particularly useful when the captured scenes lack clear reference information to help you (or the Transform tool) straighten the images.
+
+As this function relies on the presence of the `RollAngle` tag in metadata, its application is currently limited to
+
+- Canon (R5 (FW 1.5), R5m2, R6m2, R7)
+- Nikon (D5, D500 and later models)
+- Fuji (XT-5 and later models)<sup>1</sup>
+- Olympus/OM (EM-1/5/10 III and later models)
+- Panasonic (Lumix G6 and later models)
+- Pentax (K-7 and later models)<sup>2</sup>
+- Ricoh (GR III and later models)<sup>2</sup>
+
+<sup>1</sup> Fuji represents roll angle information within the range of -1° to +1° as `RollAngle=0`. <br>
+<sup>2</sup> Pentax and Ricoh also record roll angle information for the specified models. However, when used to straighten photos, the results are typically not as precise as those provided by other brands.
+
+Unfortunately, it seems that Sony does not record roll angle information in photo metadata. Even a deep analysis of a series of custom-made A7RV test images did not reveal any evidence of its presence.
+
+Straigthen Images is not available for LR5, since version 5.x of the Lightroom SDK does not yet supported the  required functionality.
+
+### Example
+
+The photo has a roll angle of 2.5°. Applying a crop angle of -2.5° compensates for the tilt. Please note that a non-zero crop angle will change the crop of the photo. Straightening the photo will result in the corners being lost.
+
+Using the 'Straighten Images' tool produces the same result as entering the roll angle compensation manually in Lightroom's 'Crop & Straighten' tool. You can then modify or even revert the compensation as desired.
+
+<img src="docs/images/Straighten%201.jpg" alt="User Interface" style="width: 1000px;"/>
+
+Please refer to the relevant section of the User Manual to learn how to use and customise this feature.  
+
 
 ## Supported Cameras
 

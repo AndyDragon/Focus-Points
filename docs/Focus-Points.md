@@ -448,7 +448,10 @@ Whether this feature is useful for straightening images is up to the individual 
 
 
 ### Example
-The photo has a roll angle of 2.5°. Applying a crop angle of -2.5° compensates for the tilt. Please note that a non-zero crop angle will change the crop of the photo. Straightening the photo will result in the corners being lost. The result obtained by using the 'Straighten Images' tool is the same as if you enter the roll angle compensation manually in Lightroom's 'Crop & Straighten' tool. This also means, that you can modify or even revert the result by
+
+The photo has a roll angle of 2.5°. Applying a crop angle of -2.5° compensates for the tilt. Please note that a non-zero crop angle will change the crop of the photo. Straightening the photo will result in the corners being lost.
+
+Using the 'Straighten Images' tool produces the same result as entering the roll angle compensation manually in Lightroom's 'Crop & Straighten' tool. You can then modify or even revert the compensation as desired.
 
 <img src="images/Straighten%201.jpg" alt="User Interface" style="width: 1000px;"/>
 
