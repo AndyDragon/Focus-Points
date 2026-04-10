@@ -386,7 +386,7 @@ The plugin also features a Metadata Viewer with live search:
 
 This is useful for viewing information that is not visible in the info sections of the focus point window. The data is retrieved by ExifTool directly from the image file on disk, so it gives a complete picture of the metadata written by the camera. Metadata can be filtered by key or value search terms. The filter accepts pattern matching with the well-known "magic characters":
 
- | Char  | <div align="left">Meaning</div>                |
+ | Char  | Meaning                                        |
  |:-----:|------------------------------------------------|
  |   .   | any character                                  |
  |   +   | one or more repetitions of previous character  |

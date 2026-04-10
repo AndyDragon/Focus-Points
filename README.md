@@ -136,7 +136,7 @@ The plugin also features a metadata viewer with live search:
 
 The Metadata Viewer is useful for viewing information that is neither visible in Lightroom's Metadata panel nor in the Information pane of the focus windows. The information is retrieved directly from the image file on disk, giving a complete picture of the metadata written by the camera. Metadata can be filtered by key or value. The filter accepts pattern matching with common 'magic characters':
 
- | Char  | <div align="left">Meaning</div>                | 
+ | Char  | Meaning                                        | 
  |:-----:|------------------------------------------------|
  |   .   | any character                                  | 
  |   +   | one or more repetitions of previous character  |
