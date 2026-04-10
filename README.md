@@ -177,7 +177,7 @@ As this function relies on the presence of the `RollAngle` tag in metadata, its 
 
 Unfortunately, it seems that Sony does not record roll angle information in photo metadata. Even a deep analysis of a series of custom-made A7RV test images did not reveal any evidence of its presence.
 
-Straigthen Images is not available for LR5, since version 5.x of the Lightroom SDK does not yet supported the  required functionality.
+Straighten Images is not available for LR5, since version 5.x of the Lightroom SDK does not yet supported the  required functionality.
 
 ### Example
 

@@ -391,7 +391,7 @@ This has been improved in V3.2:
 - The maximum length of values displayed is limited to 128 characters.
 - Truncated strings are indicated by an ellipsis symbol '...'.<br>If the truncated part contains  relevant information, it can still be reviewed by opening the metadata as text.
 - The edit fields for the 'Tag' and 'Value' filters are the same size as in point 1.
-- The heigth of the metadata window is given by the Size of plugin window setting S .. XXL
+- The height of the metadata window is given by the Size of plugin window setting S .. XXL
 - The width of the metadata window is chosen so that the head line (filter entry fields, hint) fits in but is minimum 70% of the window height.
 
 <img src="images/metadata1.jpg" alt="Metdata 1" style="width: 200px;"/>         <img src="images/metadata2.jpg" alt="Metadata 2" style="width: 200px;"/>         <img src="images/metadata3.jpg" alt="Metadata 3" style="width: 200px;"/>
@@ -431,7 +431,7 @@ Whether this feature is useful for straightening images is up to the individual 
 
 Unfortunately, it seems that Sony does not record roll angle information in photo metadata. Even a deep analysis of a series of custom-made A7RV test images did not reveal any evidence of its presence.
 
-Straigthen Images is not available for LR5, since version 5.x of the Lightroom SDK does not yet supported the  required functionality.
+Straighten Images is not available for LR5, since version 5.x of the Lightroom SDK does not yet supported the  required functionality.
 
 
 ### Example
