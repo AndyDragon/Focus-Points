@@ -187,7 +187,7 @@ Using the 'Straighten Images' tool produces the same result as entering the roll
 
 <img src="docs/images/Straighten%201.jpg" alt="User Interface" style="width: 1000px;"/>
 
-Please refer to the relevant section of the User Manual to learn how to use and customise this feature.  
+Please refer to the [relevant section](https://musselwhizzle.github.io/Focus-Points/docs/Focus-Points.html#24-straighten-images) of the User Manual to learn how to use and customise this feature.  
 
 
 ## Supported Cameras
