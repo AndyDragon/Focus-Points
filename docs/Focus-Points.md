@@ -19,25 +19,7 @@
 
 ### [Display of Focus Points](#3-display-of-focus-points)
 
-* [Canon](#32-canon)
-
-* [Nikon](#31-nikon)
-
-* [Sony](#33-sony)
-
-* [Fuji](#34-fuji)
-
-* [Olympus](#35-olympus)
-
-* [OM System](#36-om-system)
-
-* [Panasonic](#37-panasonic)
-
-* [Pentax](#38-pentax)
-
-* [Ricoh](#39-ricoh)
-
-* [Apple](#310-apple)
+* Camera-maker specific sections for:<br> [Canon](#32-canon), [Nikon](#31-nikon), [Sony](#33-sony), [Fuji](#34-fuji), [Olympus](#35-olympus), [OM System](#36-om-system),  [Panasonic](#37-panasonic), [Pentax](#38-pentax), [Ricoh](#39-ricoh), [Apple](#310-apple)
 
 ### [Special Topics](#4-special-topics)
 
