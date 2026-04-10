@@ -413,13 +413,14 @@ As this function relies on the presence of the `RollAngle` tag in metadata, its 
 
 - Canon (R5 (FW 1.5), R5m2, R6m2, R7)
 - Nikon (D5, D500 and later models)
-- Fuji (XT-5 and later models)
+- Fuji (XT-5 and later models)<sup>1</sup>
 - Olympus/OM (EM-1/5/10 III and later models)
 - Panasonic (Lumix G6 and later models)
-- Pentax (K-7 and later models)<sup>1</sup>
-- Ricoh (GR III and later models)<sup>1</sup>
+- Pentax (K-7 and later models)<sup>2</sup>
+- Ricoh (GR III and later models)<sup>2</sup>
 
-<sup>1</sup> Pentax and Ricoh also record roll angle information for the specified models. However, when used to straighten photos, the results are typically not as precise as those provided by other brands:
+<sup>1</sup> Fuji represents roll angle information within the range of -1° to +1° as `RollAngle=0`. <br>
+<sup>2</sup> Pentax and Ricoh also record roll angle information for the specified models. However, when used to straighten photos, the results are typically not as precise as those provided by other brands.
 
 - The value's numeric precision is 0.5°, so you will see roll angle values of 0, 0.5, 1.0, 1.5, and so on.
 - The recorded roll angle value does not always seem to correspond reasonably to the actual tilt angle. Consequently, images aligned based on the RollAngle tag do not always appear straight.
@@ -427,6 +428,10 @@ As this function relies on the presence of the `RollAngle` tag in metadata, its 
 
 Nevertheless, the plugin will support the straightening of photos taken with Pentax and Ricoh cameras.
 Whether this feature is useful for straightening images is up to the individual user to decide.
+
+Unfortunately, it seems that Sony does not record roll angle information in photo metadata. Even a deep analysis of a series of custom-made A7RV test images did not reveal any evidence of its presence.
+
+Straigthen Images is not available for LR5, since version 5.x of the Lightroom SDK does not yet supported the  required functionality.
 
 
 ### Example

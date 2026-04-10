@@ -40,6 +40,8 @@ To understand the principles of this plugin, how to use it and how to interpret 
     - Pentax (K-7 and later models)
     - Ricoh (GR III and later models)  
     
+    Not supported for LR5.
+  
     Please refer to the [User Manual](docs/Focus-Points.md#24-straighten-images) for a description of this feature.
   
 * **Bugfixes**
