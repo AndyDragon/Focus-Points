@@ -32,7 +32,7 @@ To understand the principles of this plugin, how to use it and how to interpret 
 * **User Interface**
   * Straighten images by making use of RollAngle metadata information [#365](https://github.com/musselwhizzle/Focus-Points/issues/365). 
   Supported for:
-    - Canon (R5 (FW 1.5), R5m2, R6m2, R7)
+    - Canon (R5 (FW 1.5), R5m2, R6m2 (FW 1.5), R6m3, R7)
     - Nikon (D5, D500 and later models)
     - Fuji (XT-5 and later models)
     - Olympus/OM (EM-1/5/10 III and later models)
@@ -164,7 +164,7 @@ Straightening individual images manually is not difficult, and Lightroom also su
 
 As this function relies on the presence of the `RollAngle` tag in metadata, its application is currently limited to
 
-- Canon (R5 (FW 1.5), R5m2, R6m2, R7)
+- Canon (R5 (FW 1.5), R5m2, R6m2 (FW 1.5), R6m3, R7)
 - Nikon (D5, D500 and later models)
 - Fuji (XT-5 and later models)<sup>1</sup>
 - Olympus/OM (EM-1/5/10 III and later models)
