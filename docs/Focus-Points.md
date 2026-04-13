@@ -411,7 +411,10 @@ Straightening individual images manually is not difficult, and Lightroom also su
 
 As this function relies on the presence of the `RollAngle` tag in metadata, its application is currently limited to
 
-- Canon (R5 (FW 1.5), R5m2, R6m2 (FW 1.5), R6m3, R7)
+- Canon 
+  - R5 (FW 1.5), R5m2
+  - R6m2 (FW 1.4), R6m3
+  - R7 (FW 1.3), R8 (FW 1.2), R10??
 - Nikon (D5, D500 and later models)
 - Fuji (XT-5 and later models)<sup>1</sup>
 - Olympus/OM (EM-1/5/10 III and later models)
